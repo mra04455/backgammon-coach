@@ -1,0 +1,72 @@
+GNU Backgammon 1.08.003 20261029
+
+Copyright (C) 1999-2004 Gary Wong.
+Copyright (C) 2004-2026 the AUTHORS; for details type `show version'.
+
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show warranty'.
+This is free software, and you are welcome to redistribute it under certain conditions; type `show copying' for details.
+
+The number of threads has been set to 4.
+Locale is now 'C'
+Match evaluations will be shown as equivalent money equity.
+Moves for gnubg must now be entered manually.
+Moves for root must now be entered manually.
+ GNU Backgammon  Position ID: 4HPwATDgc/ABMA
+                 Match ID   : cAkAAAAAAAAA
+ +13-14-15-16-17-18------19-20-21-22-23-24-+     O: gnubg
+ | X           O    |   | O              X |     0 points
+ | X           O    |   | O              X |     
+ | X           O    |   | O                |     
+ | X                |   | O                |     
+ | X                |   | O                |    
+v|                  |BAR|                  |     (Cube: 1)
+ | O                |   | X                |    
+ | O                |   | X                |     
+ | O           X    |   | X                |     
+ | O           X    |   | X              O |     On roll
+ | O           X    |   | X              O |     0 points
+ +12-11-10--9--8--7-------6--5--4--3--2--1-+     X: root
+
+36 games will be played per rollout.
+Rollout seed set to 12345.
+root doubles.
+
+Rollout done. Printing final results.
+ GNU Backgammon  Position ID: 4HPwATDgc/ABMA
+                 Match ID   : cAkAAAAAAAAA
+ +13-14-15-16-17-18------19-20-21-22-23-24-+     O: gnubg
+ | X           O    |   | O              X |     0 points
+ | X           O    |   | O              X |     
+ | X           O    |   | O                |     
+ | X                |   | O                |     
+ | X                |   | O                |    
+v|                  |BAR|                  |     (Cube: 1)
+ | O                |   | X                |    
+ | O                |   | X                |     
+ | O           X    |   | X                |     
+ | O           X    |   | X              O |     On roll
+ | O           X    |   | X              O |     0 points
+ +12-11-10--9--8--7-------6--5--4--3--2--1-+     X: root
+
+
+Cube analysis
+Rollout cubeless equity +0.085
+
+Cubeful equities:
+1. No double           +0.131
+2. Double, pass        +1.000  (+0.869)
+3. Double, take        -0.192  (-0.324)
+Proper cube action: No double, beaver (27.2%)
+
+Rollout details:
+Centered 1-cube:
+  0.524 0.163 0.007 - 0.476 0.127 0.005 CL +0.085 CF +0.131
+ [0.009 0.008 0.001 - 0.009 0.006 0.001 CL  0.023 CF  0.051]
+gnubg owns 2-cube:
+  0.526 0.164 0.006 - 0.474 0.127 0.002 CL +0.186 CF -0.192
+ [0.010 0.010 0.001 - 0.010 0.005 0.003 CL  0.052 CF  0.061]
+Full cubeful rollout with variance reduction
+36 games, Mersenne Twister dice gen. with seed 12345 and quasi-random dice
+Play: 0-ply cubeful [0ply]
+Cube: 2-ply cubeful prune [2ply]
+

@@ -1,7 +1,9 @@
 """GNU Backgammon backend.
 
 Drives the ``gnubg`` command-line program with a command file and parses
-the text output of ``hint``. Validated against gnubg 1.07.001 (2024).
+the text output of ``hint`` (evaluations) and ``analyse rollout``
+(rollouts). Validated against gnubg 1.07.001 (2024) and 1.08.003 (built by
+``scripts/build-gnubg.sh``).
 
 Why a command file rather than the Python bindings: it works with any
 stock gnubg install (brew, apt, the Windows ``gnubg-cli.exe``) and needs
@@ -18,6 +20,25 @@ Two gnubg CLI quirks this module handles for you:
    even when you asked for 2-ply. We always set positive accept counts.
    Verified empirically: with ``accept 0, extra 8`` every move came back
    ``0-ply``; with ``accept 8`` they came back ``2-ply``.
+
+Rollouts (gnubg 1.08, checked in the source):
+
+3. The bare ``rollout`` command takes no arguments, rolls out only the
+   current position, and prints its result table only when stdout is a
+   terminal. So checker plays are rolled out through the analysis path:
+   play a move, step back, ``analyse move``, then ``analyse rollout move
+   <ranks>``; cube decisions through ``double``, step back, ``analyse
+   move``, ``analyse rollout cube``. Both print their results in command
+   file mode. Ranks refer to the analysed move list, so a checker rollout
+   is two passes: an evaluation to learn the ranks, then the rollout with
+   analysis settings mirroring the evaluation settings.
+4. gnubg ships with JSD early stopping switched *off*; :class:`RolloutSettings`
+   switches it on by default (DESIGN.md: "early stop when settled"). With
+   a single alternative nothing can be compared, so a one-move rollout
+   runs to the full trial count.
+5. ``set xgid`` refuses a position with a double pending ("D"). Such a
+   position is rolled out as the doubler's decision instead; the taker's
+   verdict is derived from double/take against double/pass.
 """
 
 from __future__ import annotations
@@ -27,7 +48,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from bgcoach.engines.base import (
@@ -36,15 +57,19 @@ from bgcoach.engines.base import (
     Evaluation,
     MoveEval,
     Probs,
+    RolloutInfo,
     StaticEval,
 )
 from bgcoach.position import Position
 
-DEFAULT_BINARY_CANDIDATES = ("gnubg", "gnubg-cli", "/usr/games/gnubg")
+# The binary built from source by scripts/build-gnubg.sh lands here.
+REPO_LOCAL_BINARY = Path(__file__).resolve().parents[3] / ".gnubg" / "bin" / "gnubg"
+DEFAULT_BINARY_CANDIDATES = (str(REPO_LOCAL_BINARY), "gnubg", "gnubg-cli", "/usr/games/gnubg")
 
 
 def find_gnubg() -> str | None:
-    """Locate the gnubg executable: $BGCOACH_GNUBG, then common names."""
+    """Locate the gnubg executable: $BGCOACH_GNUBG, the repo-local build,
+    then common names on PATH."""
     env = os.environ.get("BGCOACH_GNUBG")
     if env:
         return env if Path(env).exists() or shutil.which(env) else None
@@ -67,15 +92,116 @@ class MoveFilter:
     extra: int = 4
     threshold: float = 0.16
 
+    def commands(self, scope: str) -> list[str]:
+        """``set <scope> movefilter`` lines for plies 1..4.
 
+        Positive accept counts at every even level; odd levels pass
+        everything through (gnubg's own convention). ``scope`` is
+        ``evaluation`` (for ``hint``/``eval``) or ``analysis`` (for
+        ``analyse``); the two must match for rollout ranks to line up.
+        """
+        lines: list[str] = []
+        for ply in range(1, 5):
+            for level in range(ply):
+                if level % 2 == 0:
+                    lines.append(
+                        f"set {scope} movefilter {ply} {level} "
+                        f"{self.accept} {self.extra} {self.threshold}"
+                    )
+                else:
+                    lines.append(f"set {scope} movefilter {ply} {level} -1 0 0")
+        return lines
+
+
+@dataclass(frozen=True)
+class RolloutSettings:
+    """gnubg rollout parameters.
+
+    Defaults are gnubg's own (1296 trials, cubeful, variance reduction,
+    0-ply chequer play, 2-ply cube decisions, no truncation) except JSD
+    early stopping, which gnubg ships switched off and we switch on.
+    ``truncation`` is a ply count; None rolls every game to the end.
+    """
+
+    trials: int = 1296
+    cubeful: bool = True
+    variance_reduction: bool = True
+    truncation: int | None = None
+    jsd_stop: bool = True
+    jsd_limit: float = 2.33
+    jsd_min_games: int = 324
+    seed: int | None = None
+    chequer_plies: int = 0
+    cube_plies: int = 2
+
+    def __post_init__(self) -> None:
+        if self.trials < 1:
+            raise ValueError("trials must be >= 1")
+        if self.truncation is not None and self.truncation < 1:
+            raise ValueError("truncation must be >= 1 ply or None")
+        if not 0 <= self.chequer_plies <= 4 or not 0 <= self.cube_plies <= 4:
+            raise ValueError("plies must be 0..4")
+
+    def commands(self) -> list[str]:
+        def on(b: bool) -> str:
+            return "on" if b else "off"
+
+        lines = [
+            f"set rollout trials {self.trials}",
+            f"set rollout cubeful {on(self.cubeful)}",
+            f"set rollout varredn {on(self.variance_reduction)}",
+            f"set rollout chequerplay plies {self.chequer_plies}",
+            f"set rollout cubedecision plies {self.cube_plies}",
+            "set rollout limit enable off",
+            f"set rollout jsd stop {on(self.jsd_stop)}",
+        ]
+        if self.jsd_stop:
+            lines.append(f"set rollout jsd limit {self.jsd_limit}")
+            lines.append(f"set rollout jsd minimumgames {min(self.jsd_min_games, self.trials)}")
+        if self.truncation is None:
+            lines.append("set rollout truncation enable off")
+        else:
+            lines.append("set rollout truncation enable on")
+            lines.append(f"set rollout truncation plies {self.truncation}")
+        if self.seed is not None:
+            lines.append(f"set rollout seed {self.seed}")
+        return lines
+
+    def info(self, engine_version: str | None) -> RolloutInfo:
+        return RolloutInfo(
+            trials=self.trials,
+            seed=self.seed,
+            cubeful=self.cubeful,
+            variance_reduction=self.variance_reduction,
+            truncation=self.truncation,
+            jsd_stop=self.jsd_stop,
+            jsd_limit=self.jsd_limit if self.jsd_stop else None,
+            chequer_plies=self.chequer_plies,
+            cube_plies=self.cube_plies,
+            engine_version=engine_version,
+        )
+
+
+# "    1. Cubeful 2-ply    8/5 6/5    Eq.: +0.218 (-0.229)"  (hint)
+# "*    1. Rollout          8/5 6/5    Eq.: +0.246"          (analyse rollout)
 _MOVE_RE = re.compile(
-    r"^\s*(?P<rank>\d+)\.\s+(?P<cubeful>Cubeful|Cubeless)\s+(?P<ply>\S+)\s+"
+    r"^\s*\*?\s*(?P<rank>\d+)\.\s+"
+    r"(?:(?P<cubeful>Cubeful|Cubeless)\s+(?P<ply>\S+)|(?P<rollout>Rollout))\s+"
     r"(?P<move>.+?)\s+(?:Eq\.|MWC):\s*(?P<eq>[+-]?\d+\.\d+)%?"
     r"(?:\s*\(\s*(?P<err>[+-]?\d+\.\d+)%?\s*\))?\s*$"
 )
+# Probability line; rollouts append "CL <cubeless> CF <cubeful>".
 _PROBS_RE = re.compile(
-    r"^\s*(\d\.\d+)\s+(\d\.\d+)\s+(\d\.\d+)\s+-\s+(\d\.\d+)\s+(\d\.\d+)\s+(\d\.\d+)\s*$"
+    r"^\s*(\d\.\d+)\s+(\d\.\d+)\s+(\d\.\d+)\s+-\s+(\d\.\d+)\s+(\d\.\d+)\s+(\d\.\d+)"
+    r"(?:\s+CL\s+(?P<cl>[+-]?\d+\.\d+)(?:\s+CF\s+(?P<cf>[+-]?\d+\.\d+))?)?\s*$"
 )
+# Standard-error line under a rollout result: "[0.002 ... - ... CL 0.004 CF 0.011]".
+_SD_RE = re.compile(
+    r"^\s*\[\s*(\d\.\d+)\s+(\d\.\d+)\s+(\d\.\d+)\s+-\s+(\d\.\d+)\s+(\d\.\d+)\s+(\d\.\d+)"
+    r"\s+CL\s+(?P<cl>\d+\.\d+)(?:\s+CF\s+(?P<cf>\d+\.\d+))?\s*\]"
+)
+_GAMES_RE = re.compile(r"^\s*(?P<n>\d+) games,.*?seed (?P<seed>\d+)")
+_VERSION_RE = re.compile(r"^GNU Backgammon (?P<version>\S+)", re.MULTILINE)
 _CUBE_EQ_RE = re.compile(
     r"^\s*\d\.\s+(?P<label>No (?:re)?double|(?:Re)?[Dd]ouble, take|(?:Re)?[Dd]ouble, pass)\s+"
     r"(?P<eq>[+-]?\d+\.\d+)"
@@ -95,53 +221,67 @@ _CANNOT_DOUBLE_RE = re.compile(r"cannot double", re.IGNORECASE)
 
 class GnubgEngine:
     name = "gnubg"
+    # Class-level defaults so instances built without __init__ (tests) still work.
+    threads: int | None = None
+    rollout_settings: RolloutSettings = RolloutSettings()
+    rollout_timeout: float = 4 * 3600.0
+    analysis_plies: int = 2
 
     def __init__(
         self,
         binary: str | None = None,
         *,
-        move_filter: MoveFilter = MoveFilter(),
+        move_filter: MoveFilter | None = None,
         timeout: float = 600.0,
+        threads: int | None = None,
+        rollout_settings: RolloutSettings | None = None,
+        rollout_timeout: float = 4 * 3600.0,
     ) -> None:
         self.binary = binary or find_gnubg()
         if self.binary is None:
             raise EngineError(
-                "gnubg not found. Install GNU Backgammon (brew install gnubg / "
-                "apt install gnubg / the Windows installer, which provides gnubg-cli.exe) "
-                "or set BGCOACH_GNUBG to the executable path."
+                "gnubg not found. Run scripts/build-gnubg.sh, install GNU Backgammon "
+                "(brew install gnubg / apt install gnubg / the Windows installer, which "
+                "provides gnubg-cli.exe), or set BGCOACH_GNUBG to the executable path."
             )
-        self.move_filter = move_filter
+        self.move_filter = move_filter if move_filter is not None else MoveFilter()
         self.timeout = timeout
+        # gnubg starts with one calculation thread; rollouts scale with cores.
+        self.threads = threads if threads is not None else (os.cpu_count() or 1)
+        self.rollout_settings = (
+            rollout_settings if rollout_settings is not None else RolloutSettings()
+        )
+        self.rollout_timeout = rollout_timeout
 
     # ------------------------------------------------------------------
 
-    def build_commands(self, position: Position, *, plies: int) -> str:
-        if not 0 <= plies <= 4:
-            raise ValueError("plies must be 0..4")
-        mf = self.move_filter
+    def _prefix(self) -> list[str]:
         lines = [
             "set lang C",
             "set output mwc off",
             "set output rawboard off",
-            "set player 0 human",
-            "set player 1 human",
-            f"set evaluation chequerplay evaluation plies {plies}",
-            "set evaluation chequerplay evaluation cubeful on",
-            f"set evaluation cubedecision evaluation plies {plies}",
-            "set evaluation cubedecision evaluation cubeful on",
         ]
-        # Positive accept counts at every ply; even plies filter, odd plies
-        # pass everything through (gnubg's own convention).
-        for ply in range(1, 5):
-            for level in range(ply):
-                if level % 2 == 0:
-                    lines.append(
-                        f"set evaluation movefilter {ply} {level} "
-                        f"{mf.accept} {mf.extra} {mf.threshold}"
-                    )
-                else:
-                    lines.append(f"set evaluation movefilter {ply} {level} -1 0 0")
-        lines += [
+        if self.threads and self.threads > 1:
+            lines.append(f"set threads {self.threads}")
+        lines += ["set player 0 human", "set player 1 human"]
+        return lines
+
+    def _eval_settings(self, scope: str, plies: int) -> list[str]:
+        """``set evaluation ...`` or ``set analysis ...`` lines for ``plies``."""
+        if not 0 <= plies <= 4:
+            raise ValueError("plies must be 0..4")
+        return [
+            f"set {scope} chequerplay evaluation plies {plies}",
+            f"set {scope} chequerplay evaluation cubeful on",
+            f"set {scope} cubedecision evaluation plies {plies}",
+            f"set {scope} cubedecision evaluation cubeful on",
+            *self.move_filter.commands(scope),
+        ]
+
+    def build_commands(self, position: Position, *, plies: int) -> str:
+        lines = [
+            *self._prefix(),
+            *self._eval_settings("evaluation", plies),
             "new match 0",
             f"set xgid {position.xgid()}",
             "hint",
@@ -153,7 +293,44 @@ class GnubgEngine:
             lines.append("eval")
         return "\n".join(lines) + "\n"
 
-    def run_raw(self, commands: str) -> str:
+    def build_rollout_commands(
+        self,
+        position: Position,
+        *,
+        settings: RolloutSettings,
+        play: str | None,
+        ranks: list[int] | None,
+    ) -> str:
+        """Command file for a rollout.
+
+        Checker play (``play`` and ``ranks`` given): play ``play`` so a move
+        record exists, step back, analyse it at ``analysis_plies`` with the
+        same move filter as :meth:`build_commands`, then roll out the moves
+        at ``ranks`` in that analysed list. Cube (both None): offer the
+        double, step back, analyse, roll out the cube decision.
+        """
+        lines = [
+            *self._prefix(),
+            *self._eval_settings("analysis", self.analysis_plies),
+            *settings.commands(),
+            "new match 0",
+            f"set xgid {position.xgid()}",
+        ]
+        if play is not None:
+            if not ranks:
+                raise ValueError("ranks must be given with play")
+            lines += [
+                f"move {move_for_command(play)}",
+                "previous",
+                "analyse move",
+                "analyse rollout move " + " ".join(str(r) for r in sorted(ranks)),
+            ]
+        else:
+            lines += ["double", "previous", "analyse move", "analyse rollout cube"]
+        return "\n".join(lines) + "\n"
+
+    def run_raw(self, commands: str, *, timeout: float | None = None) -> str:
+        timeout = self.timeout if timeout is None else timeout
         with tempfile.TemporaryDirectory(prefix="bgcoach-gnubg-") as tmp:
             cmd_path = Path(tmp) / "commands.txt"
             cmd_path.write_text(commands)
@@ -162,13 +339,13 @@ class GnubgEngine:
                     [self.binary, "-t", "-q", "-c", str(cmd_path)],
                     capture_output=True,
                     text=True,
-                    timeout=self.timeout,
+                    timeout=timeout,
                     check=False,
                 )
             except FileNotFoundError as e:
                 raise EngineError(f"could not run {self.binary}: {e}") from e
             except subprocess.TimeoutExpired as e:
-                raise EngineError(f"gnubg timed out after {self.timeout}s") from e
+                raise EngineError(f"gnubg timed out after {timeout}s") from e
         out = proc.stdout + ("\n" + proc.stderr if proc.stderr.strip() else "")
         if proc.returncode not in (0, None) and not out.strip():
             raise EngineError(f"gnubg exited {proc.returncode} with no output")
@@ -193,6 +370,112 @@ class GnubgEngine:
             return Evaluation(position, "static", self.name, level, static=static, raw=raw)
         raise EngineError(_diagnose(raw, "no cube analysis in gnubg output"))
 
+    # ------------------------------------------------------------------
+    # Rollouts
+    # ------------------------------------------------------------------
+
+    def rollout(
+        self,
+        position: Position,
+        *,
+        moves: list[str] | None = None,
+        top: int = 2,
+        settings: RolloutSettings | None = None,
+    ) -> Evaluation:
+        """Roll out a checker play or cube decision; see :class:`Engine`.
+
+        ``moves`` are matched to gnubg's notation loosely (order of the
+        parts and ``(2)`` shorthand do not matter). A position with a
+        double pending is rolled out as the doubler's decision (quirk 5).
+        """
+        rs = settings or self.rollout_settings
+        if position.cube_action is not None:
+            position = position.with_(cube_action=None)
+        if position.dice is not None:
+            return self._rollout_checker(position, moves, top, rs)
+        if moves:
+            raise ValueError("moves only apply to checker-play positions (with dice)")
+        return self._rollout_cube(position, rs)
+
+    def _rollout_checker(
+        self,
+        position: Position,
+        moves: list[str] | None,
+        top: int,
+        rs: RolloutSettings,
+    ) -> Evaluation:
+        ranked = self.evaluate(position, plies=self.analysis_plies).moves
+        if moves is None:
+            if top < 1:
+                raise ValueError("top must be >= 1")
+            wanted = ranked[:top]
+        else:
+            by_key = {canonical_move(m.move): m for m in ranked}
+            wanted = []
+            for text in moves:
+                m = by_key.get(canonical_move(text))
+                if m is None:
+                    listed = ", ".join(x.move for x in ranked)
+                    raise EngineError(
+                        f"move {text!r} is not in gnubg's move list for this position. "
+                        f"Available: {listed}"
+                    )
+                if m not in wanted:
+                    wanted.append(m)
+        ranks = [m.rank for m in wanted]
+        commands = self.build_rollout_commands(
+            position, settings=rs, play=ranked[0].move, ranks=ranks
+        )
+        raw = self.run_raw(commands, timeout=self.rollout_timeout)
+        rolled = [m for m in parse_checker_hint(raw) if m.ply == "rollout"]
+        if len(rolled) != len(ranks):
+            raise EngineError(
+                _diagnose(raw, f"expected {len(ranks)} rolled-out moves, found {len(rolled)}")
+            )
+        got = {canonical_move(m.move) for m in rolled}
+        want = {canonical_move(m.move) for m in wanted}
+        if got != want:
+            raise EngineError(
+                "gnubg's analysis ranked the moves differently from its evaluation; "
+                f"wanted {[m.move for m in wanted]}, rolled out {[m.move for m in rolled]}"
+            )
+        rolled.sort(key=lambda m: -m.equity)
+        best = rolled[0].equity
+        rolled = [
+            replace(m, rank=i + 1, error=round(m.equity - best, 3)) for i, m in enumerate(rolled)
+        ]
+        return Evaluation(
+            position,
+            "checker",
+            self.name,
+            f"gnubg rollout {rs.trials}",
+            moves=rolled,
+            raw=raw,
+            rollout=rs.info(parse_version(raw)),
+        )
+
+    def _rollout_cube(self, position: Position, rs: RolloutSettings) -> Evaluation:
+        commands = self.build_rollout_commands(position, settings=rs, play=None, ranks=None)
+        raw = self.run_raw(commands, timeout=self.rollout_timeout)
+        cube = parse_cube_rollout(raw)
+        if cube is None:
+            raise EngineError(
+                _diagnose(
+                    raw,
+                    "no cube rollout in gnubg output (the player on roll may have no cube "
+                    "decision here; dead-cube position rollouts are not supported yet)",
+                )
+            )
+        return Evaluation(
+            position,
+            "cube",
+            self.name,
+            f"gnubg rollout {rs.trials}",
+            cube=cube,
+            raw=raw,
+            rollout=rs.info(parse_version(raw)),
+        )
+
 
 # ----------------------------------------------------------------------
 # Parsers (public so tests and other backends can reuse them)
@@ -209,6 +492,18 @@ def parse_checker_hint(text: str) -> list[MoveEval]:
             2-ply cubeful prune [world class]
         2. Cubeful 2-ply    24/23 13/10                  Eq.: -0.011 (-0.229)
            ...
+
+    Rolled-out entries (from ``analyse rollout move``) look like::
+
+        *    1. Rollout          8/5 6/5                      Eq.: +0.246
+               0.553 0.169 0.007 - 0.447 0.113 0.005 CL +0.163 CF +0.246
+              [0.002 0.001 0.000 - 0.002 0.001 0.000 CL  0.004 CF  0.011]
+                Full cubeful rollout with variance reduction
+                1296 games, Mersenne Twister dice gen. with seed 12345 and quasi-random dice
+
+    and come back with ``ply="rollout"``, ``se`` (standard error of the
+    cubeful equity, or of the cubeless one in a cubeless rollout),
+    ``trials`` and ``cubeless_equity`` filled in.
     """
     moves: list[MoveEval] = []
     lines = text.splitlines()
@@ -217,10 +512,24 @@ def parse_checker_hint(text: str) -> list[MoveEval]:
         m = _MOVE_RE.match(lines[i])
         if m:
             probs = None
+            cubeless = None
+            se = None
+            trials = None
             if i + 1 < len(lines):
                 pm = _PROBS_RE.match(lines[i + 1])
                 if pm:
-                    probs = Probs(*(float(x) for x in pm.groups()))
+                    probs = Probs(*(float(x) for x in pm.groups()[:6]))
+                    if pm.group("cl") is not None:
+                        cubeless = float(pm.group("cl"))
+            is_rollout = m.group("rollout") is not None
+            if is_rollout:
+                for line in lines[i + 2 : i + 8]:
+                    if se is None and (sm := _SD_RE.match(line)):
+                        se = float(sm.group("cf") or sm.group("cl"))
+                    elif trials is None and (gm := _GAMES_RE.match(line)):
+                        trials = int(gm.group("n"))
+                    if _MOVE_RE.match(line):
+                        break
             eq = float(m.group("eq"))
             err = float(m.group("err")) if m.group("err") is not None else 0.0
             moves.append(
@@ -230,7 +539,10 @@ def parse_checker_hint(text: str) -> list[MoveEval]:
                     equity=eq,
                     error=err,
                     probs=probs,
-                    ply=m.group("ply"),
+                    ply="rollout" if is_rollout else m.group("ply"),
+                    se=se,
+                    trials=trials,
+                    cubeless_equity=cubeless,
                 )
             )
         i += 1
@@ -253,26 +565,30 @@ def parse_cube_hint(text: str) -> CubeEval | None:
     """
     if "Cube analysis" not in text:
         return None
-    block = text[text.index("Cube analysis"):]
+    block = text[text.index("Cube analysis") :]
     probs = None
     cubeless = None
     ply = "?"
     eqs: dict[str, float] = {}
     proper = None
     for line in block.splitlines():
-        if (m := _CUBELESS_RE.match(line)):
+        if m := _CUBELESS_RE.match(line):
             ply = m.group("ply")
             cubeless = float(m.group("eq"))
             continue
         if probs is None and (m := _PROBS_RE.match(line)):
-            probs = Probs(*(float(x) for x in m.groups()))
+            probs = Probs(*(float(x) for x in m.groups()[:6]))
             continue
-        if (m := _CUBE_EQ_RE.match(line)):
+        if m := _CUBE_EQ_RE.match(line):
             label = m.group("label").lower()
-            key = "no_double" if label.startswith("no") else ("double_take" if "take" in label else "double_pass")
+            key = (
+                "no_double"
+                if label.startswith("no")
+                else ("double_take" if "take" in label else "double_pass")
+            )
             eqs[key] = float(m.group("eq"))
             continue
-        if (m := _PROPER_RE.match(line)):
+        if m := _PROPER_RE.match(line):
             proper = m.group("action").strip()
     if not {"no_double", "double_take", "double_pass"} <= eqs.keys() or proper is None:
         return None
@@ -285,6 +601,81 @@ def parse_cube_hint(text: str) -> CubeEval | None:
         cubeless_equity=cubeless,
         ply=ply,
     )
+
+
+def parse_cube_rollout(text: str) -> CubeEval | None:
+    """Parse the output of ``analyse rollout cube``.
+
+    The cube block is the one :func:`parse_cube_hint` reads (with
+    ``Rollout cubeless equity`` in place of a ply), followed by::
+
+        Rollout details:
+        Centered 1-cube:
+          0.524 0.163 0.007 - 0.476 0.127 0.005 CL +0.085 CF +0.131
+         [0.009 0.008 0.001 - 0.009 0.006 0.001 CL  0.023 CF  0.051]
+        gnubg owns 2-cube:
+          0.526 0.164 0.006 - 0.474 0.127 0.002 CL +0.186 CF -0.192
+         [0.010 0.010 0.001 - 0.010 0.005 0.003 CL  0.052 CF  0.061]
+        Full cubeful rollout with variance reduction
+        36 games, Mersenne Twister dice gen. with seed 12345 and quasi-random dice
+
+    The first bracketed line is the no-double rollout's standard errors,
+    the second the double/take rollout's.
+    """
+    cube = parse_cube_hint(text)
+    if cube is None or "Rollout details" not in text:
+        return None
+    details = text[text.index("Rollout details") :]
+    ses: list[float] = []
+    trials = None
+    for line in details.splitlines():
+        if m := _SD_RE.match(line):
+            ses.append(float(m.group("cf") or m.group("cl")))
+        elif trials is None and (m := _GAMES_RE.match(line)):
+            trials = int(m.group("n"))
+    return replace(
+        cube,
+        ply="rollout",
+        se_no_double=ses[0] if len(ses) > 0 else None,
+        se_double_take=ses[1] if len(ses) > 1 else None,
+        trials=trials,
+    )
+
+
+def parse_version(text: str) -> str | None:
+    """The gnubg version from the banner, e.g. ``"1.08.003"``."""
+    m = _VERSION_RE.search(text)
+    return m.group("version") if m else None
+
+
+def canonical_move(move: str) -> tuple[str, ...]:
+    """A comparison key for a move in gnubg notation.
+
+    Ignores hit markers, the order of the parts and ``(n)`` repetition
+    shorthand, so ``"6/5 8/5"`` and ``"8/5 6/5"`` and ``"8/5(2)"`` vs
+    ``"8/5 8/5"`` compare equal. Case-insensitive (``bar``/``Bar``).
+    """
+    parts: list[str] = []
+    for tok in move.replace("*", "").split():
+        m = re.fullmatch(r"(.+?)\((\d+)\)", tok)
+        if m:
+            parts.extend([m.group(1)] * int(m.group(2)))
+        else:
+            parts.append(tok)
+    return tuple(sorted(p.lower() for p in parts))
+
+
+def move_for_command(move: str) -> str:
+    """Turn gnubg's printed notation into something its ``move`` command
+    accepts: drop hit markers and expand ``(n)`` shorthand."""
+    parts: list[str] = []
+    for tok in move.replace("*", "").split():
+        m = re.fullmatch(r"(.+?)\((\d+)\)", tok)
+        if m:
+            parts.extend([m.group(1)] * int(m.group(2)))
+        else:
+            parts.append(tok)
+    return " ".join(parts)
 
 
 def parse_eval_table(text: str, *, prefer_ply: int = 2) -> StaticEval | None:
@@ -322,7 +713,9 @@ def parse_eval_table(text: str, *, prefer_ply: int = 2) -> StaticEval | None:
         )
     if not rows:
         return None
-    best = max(p for p in rows if p <= prefer_ply) if any(p <= prefer_ply for p in rows) else max(rows)
+    best = (
+        max(p for p in rows if p <= prefer_ply) if any(p <= prefer_ply for p in rows) else max(rows)
+    )
     return rows[best]
 
 

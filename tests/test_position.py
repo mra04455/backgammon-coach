@@ -3,7 +3,6 @@ import pytest
 from bgcoach.position import (
     BOTTOM,
     TOP,
-    STARTING_XGID,
     Position,
     XGIDError,
     parse_xgid,

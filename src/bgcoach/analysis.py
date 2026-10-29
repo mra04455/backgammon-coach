@@ -148,7 +148,9 @@ def summarize(sweep: Sweep) -> list[dict]:
                 row["double_margin_delta"] = round(h["double_margin"] - base_h["double_margin"], 3)
                 row["action_changed"] = h["action"] != base_h["action"]
             else:
-                row["cubeful_equity_delta"] = round(h["cubeful_equity"] - base_h["cubeful_equity"], 3)
+                row["cubeful_equity_delta"] = round(
+                    h["cubeful_equity"] - base_h["cubeful_equity"], 3
+                )
         elif base_h and {base_h["kind"], h["kind"]} == {"cube", "static"}:
             # A variant killed or revived the cube; compare position values instead.
             base_val = base_ev.best_equity if base_ev else None

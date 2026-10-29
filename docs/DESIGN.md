@@ -34,7 +34,11 @@ the same core; the core is designed so that only the driver changes.
     finder (slower, no variance reduction).
 - Rollout settings: gnubg defaults (1296 trials, cubeful, variance reduction,
   no truncation, early stop when settled), extended to 5184 trials when the
-  decision being confirmed is close.
+  decision being confirmed is close. Note that the gnubg binary ships with
+  early stopping switched off; the driver switches JSD stopping on (limit
+  2.33, minimum 324 games). Measured on a 4-core machine with gnubg
+  1.08.003: about 100 s per candidate at 1296 trials, so a two-play
+  decision is about 3.5 minutes and a cube decision about 1.7 minutes.
 - Money play only in version one. Match context is carried in the position
   format so match play is additive later.
 - Cube verdicts (take/pass, double/no double) are derived from cubeful
@@ -155,6 +159,8 @@ is its own project and depends on access to the expert literature.
 - Game-file import and blunder selection.
 - Growing the reference-position library.
 - A corpus of expert writing (bkgm.com, bgonline.org, etc.) for the analyst
-  to draw on; blocked on network access from the cloud environment.
+  to draw on. Both sites were reachable from the cloud environment on
+  2026-10-29 (the research notes were written while they were blocked), so
+  this is deferred on priority, not access.
 - The public app: web front end plus an API-driven agent loop over the same
   core.

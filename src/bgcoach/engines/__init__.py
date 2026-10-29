@@ -6,7 +6,7 @@ themselves in :data:`REGISTRY`; the XG backend will live beside gnubg here.
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 from bgcoach.engines.base import (
     CubeEval,
@@ -15,6 +15,7 @@ from bgcoach.engines.base import (
     Evaluation,
     MoveEval,
     Probs,
+    RolloutInfo,
     StaticEval,
 )
 
@@ -25,6 +26,7 @@ def register(name: str):
     def deco(factory: Callable[[], Engine]):
         REGISTRY[name] = factory
         return factory
+
     return deco
 
 
@@ -50,6 +52,7 @@ __all__ = [
     "Evaluation",
     "MoveEval",
     "Probs",
+    "RolloutInfo",
     "StaticEval",
     "REGISTRY",
     "get_engine",

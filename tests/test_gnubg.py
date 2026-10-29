@@ -77,7 +77,9 @@ def test_build_commands_uses_positive_accept_counts():
     eng.binary = "gnubg"
     eng.move_filter = MoveFilter(accept=6, extra=2, threshold=0.1)
     eng.timeout = 1
-    cmds = eng.build_commands(parse_xgid("XGID=-b----E-C---eE---c-e----B-:0:0:1:31:0:0:0:0:10"), plies=2)
+    cmds = eng.build_commands(
+        parse_xgid("XGID=-b----E-C---eE---c-e----B-:0:0:1:31:0:0:0:0:10"), plies=2
+    )
     assert "set evaluation chequerplay evaluation plies 2" in cmds
     assert "set evaluation movefilter 2 0 6 2 0.1" in cmds
     assert "set evaluation movefilter 2 1 -1 0 0" in cmds

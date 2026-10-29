@@ -1,0 +1,111 @@
+GNU Backgammon 1.08.003 20261029
+
+Copyright (C) 1999-2004 Gary Wong.
+Copyright (C) 2004-2026 the AUTHORS; for details type `show version'.
+
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show warranty'.
+This is free software, and you are welcome to redistribute it under certain conditions; type `show copying' for details.
+
+The number of threads has been set to 4.
+Locale is now 'C'
+Match evaluations will be shown as equivalent money equity.
+Moves for gnubg must now be entered manually.
+Moves for root must now be entered manually.
+Rollout seed set to 12345.
+Stop rollout of choices based on JSDs
+Rollouts (or rollouts of moves) may stop when the equity is more than 2.330 joint standard deviations from the best move being rolled out
+After 36 games, rollouts will stop if the JSDs are large enough.
+324 games will be played per rollout.
+`rollout' will use:
+324 games will be played per rollout.
+No truncation.
+Will truncate cubeful money game rollouts when reaching exact bearoff database.
+Will truncate money game rollouts when reaching exact bearoff database.
+Will truncate *cubeless* rollouts when reaching one-sided bearoff database.
+Lookahead variance reduction is enabled.
+Quasi-random dice are enabled.
+Cubeful rollout.
+Rollout as opening move disabled.
+Mersenne Twister dice generator with seed 12345.
+Chequer play parameters:
+        0-ply evaluation.
+        Not using pruning neural nets.        Cubeful evaluations.
+        Noiseless evaluations.
+Cube decision parameters:
+        2-ply evaluation.
+        Using pruning neural nets.        Cubeful evaluations.
+        Noiseless evaluations.
+Move filter:
+      Move filter for 1 ply:
+        keep the first 0 0-ply moves and up to 12 more moves within equity 0.24
+      Move filter for 2 ply:
+        keep the first 0 0-ply moves and up to 12 more moves within equity 0.24
+        keep the first 0 1-ply moves and up to 6 more moves within equity 0.12
+      Move filter for 3 ply:
+        keep the first 0 0-ply moves and up to 16 more moves within equity 0.32
+        keep the first 0 1-ply moves and up to 8 more moves within equity 0.16
+        keep the first 0 2-ply moves and up to 4 more moves within equity 0.06
+      Move filter for 4 ply:
+        keep the first 0 0-ply moves and up to 16 more moves within equity 0.32
+        keep the first 0 1-ply moves and up to 12 more moves within equity 0.16
+        keep the first 0 2-ply moves and up to 6 more moves within equity 0.08
+        keep the first 0 3-ply moves and up to 4 more moves within equity 0.06
+
+ GNU Backgammon  Position ID: 4HPwATDgc/ABMA
+                 Match ID   : cAkAAAAAAAAE
+ +13-14-15-16-17-18------19-20-21-22-23-24-+     O: gnubg
+ | X           O    |   | O              X |     0 points
+ | X           O    |   | O              X |     
+ | X           O    |   | O                |     
+ | X                |   | O                |     
+ | X                |   | O                |    
+v|                  |BAR|                  |     (Cube: 1)
+ | O                |   | X                |    
+ | O                |   | X                |     
+ | O           X    |   | X                |     
+ | O           X    |   | X              O |     On roll
+ | O           X    |   | X              O |     0 points
+ +12-11-10--9--8--7-------6--5--4--3--2--1-+     X: root
+
+root doubles.
+
+Rollout done. Printing final results.
+ GNU Backgammon  Position ID: 4HPwATDgc/ABMA
+                 Match ID   : cAkAAAAAAAAE
+ +13-14-15-16-17-18------19-20-21-22-23-24-+     O: gnubg
+ | X           O    |   | O              X |     0 points
+ | X           O    |   | O              X |     
+ | X           O    |   | O                |     
+ | X                |   | O                |     
+ | X                |   | O                |    
+v|                  |BAR|                  |     (Cube: 1)
+ | O                |   | X                |    
+ | O                |   | X                |     
+ | O           X    |   | X                |     
+ | O           X    |   | X              O |     On roll
+ | O           X    |   | X              O |     0 points
+ +12-11-10--9--8--7-------6--5--4--3--2--1-+     X: root
+
+
+Cube analysis
+Rollout cubeless equity +0.068
+
+Cubeful equities:
+1. No double           +0.067
+2. Double, pass        +1.000  (+0.933)
+3. Double, take        -0.240  (-0.307)
+Proper cube action: No double, take (24.8%)
+
+Rollout details:
+Centered 1-cube:
+  0.517 0.158 0.007 - 0.483 0.129 0.003 CL +0.068 CF +0.067
+ [0.009 0.008 0.001 - 0.009 0.006 0.003 CL  0.024 CF  0.048]
+gnubg owns 2-cube:
+  0.524 0.164 0.007 - 0.476 0.130 0.003 CL +0.170 CF -0.240
+ [0.009 0.010 0.001 - 0.009 0.006 0.003 CL  0.051 CF  0.065]
+Full cubeful rollout with variance reduction
+38 games, Mersenne Twister dice gen. with seed 12345 and quasi-random dice
+Stop when best play is enough JSDs ahead: limit 2.3300 (min. 36 games)
+Play: 0-ply cubeful [0ply]
+Cube: 2-ply cubeful prune [2ply]
+

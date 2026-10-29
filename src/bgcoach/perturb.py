@@ -14,8 +14,9 @@ is what the MCP server exposes.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import replace
-from typing import Any, Callable
+from typing import Any
 
 from bgcoach.position import BOTTOM, TOP, Position, own_point_to_index
 
@@ -147,8 +148,13 @@ def set_turn(pos: Position, player: int) -> Position:
     return replace(pos, turn=_sign(player))
 
 
-def set_score(pos: Position, bottom: int, top: int, match_length: int | None = None,
-              crawford: bool | None = None) -> Position:
+def set_score(
+    pos: Position,
+    bottom: int,
+    top: int,
+    match_length: int | None = None,
+    crawford: bool | None = None,
+) -> Position:
     changes: dict[str, Any] = {"score": (bottom, top)}
     if match_length is not None:
         changes["match_length"] = match_length

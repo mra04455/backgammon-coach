@@ -12,6 +12,8 @@ Tool design notes
   can inspect a variant (and the ASCII board) before spending engine time.
 * ``sweep`` is the workhorse for hypothesis testing: one base position,
   several labelled variants, everything evaluated, deltas summarised.
+* ``rollout`` is the confirmer: slow, so it is called on the original
+  position first and then only on the variants an explanation rests on.
 """
 
 from __future__ import annotations
@@ -81,9 +83,15 @@ def show_position(xgid: str) -> dict:
         "dice": list(p.dice) if p.dice else None,
         "cube_action": p.cube_action,
         "cube": {"value": p.cube_value, "owner": p.cube_owner},
-        "score": {"bottom": p.score[0], "top": p.score[1], "match_length": p.match_length,
-                  "crawford": p.crawford, "money": p.is_money_game,
-                  "jacoby": p.jacoby, "beaver": p.beaver},
+        "score": {
+            "bottom": p.score[0],
+            "top": p.score[1],
+            "match_length": p.match_length,
+            "crawford": p.crawford,
+            "money": p.is_money_game,
+            "jacoby": p.jacoby,
+            "beaver": p.beaver,
+        },
         "pips": {"bottom": p.pip_count(BOTTOM), "top": p.pip_count(TOP)},
         "off": {"bottom": p.off(BOTTOM), "top": p.off(TOP)},
         "bar": {"bottom": p.bar[0], "top": p.bar[1]},
@@ -185,17 +193,71 @@ def sweep(
     """
     try:
         base = parse_xgid(xgid)
-        spec = [(v.get("label", f"variant {i+1}"), v["operations"]) for i, v in enumerate(variants)]
+        spec = [
+            (v.get("label", f"variant {i + 1}"), v["operations"]) for i, v in enumerate(variants)
+        ]
         # Build first so a bad operation fails before any engine time is spent.
-        for label, ops in spec:
+        for _label, ops in spec:
             perturb.apply(base, ops)
         result = analysis.run_sweep(
-            _engine(engine or DEFAULT_ENGINE), base, spec,
-            plies=_plies(plies), workers=max(1, min(workers, 8)),
+            _engine(engine or DEFAULT_ENGINE),
+            base,
+            spec,
+            plies=_plies(plies),
+            workers=max(1, min(workers, 8)),
         )
     except (XGIDError, EngineError, perturb.PerturbError, ValueError, KeyError) as e:
         return _err(e)
     return result.to_dict()
+
+
+@mcp.tool()
+def rollout(
+    xgid: str,
+    moves: list[str] | None = None,
+    top: int = 2,
+    trials: int | None = None,
+    truncate: int | None = None,
+    seed: int | None = None,
+    jsd_stop: bool = True,
+    engine: str | None = None,
+) -> dict:
+    """Roll out a checker play or cube decision. This is the oracle's verdict;
+    evaluations only rank and screen.
+
+    Checker play (XGID with dice): rolls out ``moves`` (gnubg notation, e.g.
+    "24/23 13/10"; part order and "(2)" shorthand don't matter) or, if none
+    are given, the ``top`` plays by 2-ply ranking. Cube (no dice): rolls out
+    no-double against double/take; a pending double is rolled out as the
+    doubler's decision and the take verdict derived from it.
+
+    Defaults are gnubg's (1296 trials, cubeful, variance reduction, full
+    length) plus JSD early stopping; a settled two-play decision stops after
+    324 games. Budget about 100 s per candidate at 1296 trials on four
+    cores, so keep ``moves`` to the plays that matter. ``truncate`` (plies)
+    gives a faster ranking rollout for sweeps; use full rollouts for the
+    numbers that reach an account. Every result carries ``se`` (standard
+    error) and ``trials``; two plays within about two joint SE are level.
+    """
+    from bgcoach.engines.gnubg import RolloutSettings
+
+    try:
+        p = parse_xgid(xgid)
+        kwargs: dict[str, Any] = {"jsd_stop": jsd_stop}
+        if trials is not None:
+            kwargs["trials"] = trials
+        if truncate is not None:
+            kwargs["truncation"] = truncate
+        if seed is not None:
+            kwargs["seed"] = seed
+        ev = _engine(engine or DEFAULT_ENGINE).rollout(
+            p, moves=moves or None, top=top, settings=RolloutSettings(**kwargs)
+        )
+    except (XGIDError, EngineError, ValueError) as e:
+        return _err(e)
+    d = ev.to_dict()
+    d["headline"] = analysis.headline(ev)
+    return d
 
 
 @mcp.tool()

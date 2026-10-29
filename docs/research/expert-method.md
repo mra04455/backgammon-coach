@@ -2,7 +2,7 @@
 
 Research note for the AI-analyst study tool (hypothesis -> varied positions -> gnubg -> plain-language account).
 
-Sourcing caveat: in this session direct fetches of bkgm.com, bgonline.org, thegammonpress.com, fortuitouspress.com, usbgf.org and gammonvillage.com were blocked by network policy (403 from the proxy). Everything below comes from search-engine excerpts of those pages, cross-checked across several queries. Quotations were returned verbatim by the search index; confirm page-level detail by reading the pages.
+Sourcing caveat: when this note was written, direct fetches of bkgm.com, bgonline.org, thegammonpress.com, fortuitouspress.com, usbgf.org and gammonvillage.com were blocked by network policy (403 from the proxy). Everything below comes from search-engine excerpts of those pages, cross-checked across several queries. Quotations were returned verbatim by the search index. As of 2026-10-29 bkgm.com and bgonline.org are reachable from the cloud environment (the other sites were not re-tested), so page-level detail can now be confirmed by reading the pages; that has not been done yet.
 
 ## 1. How experts find what drives a position
 

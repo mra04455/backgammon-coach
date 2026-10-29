@@ -13,6 +13,8 @@ Conventions
   report them.
 * ``error`` on a move is the equity lost relative to the best move
   (0.0 for the best move, negative otherwise).
+* Rollout results carry a standard error (``se``) on the cubeful equity
+  and the number of trials actually played; evaluations leave them None.
 """
 
 from __future__ import annotations
@@ -39,10 +41,7 @@ class Probs:
 
     def cubeless_equity(self) -> float:
         """Money cubeless equity implied by the probabilities."""
-        return (
-            self.win + self.win_g + self.win_bg
-            - self.lose - self.lose_g - self.lose_bg
-        )
+        return self.win + self.win_g + self.win_bg - self.lose - self.lose_g - self.lose_bg
 
 
 @dataclass(frozen=True)
@@ -53,6 +52,9 @@ class MoveEval:
     error: float  # <= 0; 0.0 for the best move
     probs: Probs | None
     ply: str  # e.g. "2-ply", "3-ply", "rollout"
+    se: float | None = None  # standard error of ``equity`` (rollouts only)
+    trials: int | None = None  # games actually played (rollouts only)
+    cubeless_equity: float | None = None  # rollouts report it alongside cubeful
 
 
 @dataclass(frozen=True)
@@ -64,6 +66,9 @@ class CubeEval:
     probs: Probs | None
     cubeless_equity: float | None
     ply: str
+    se_no_double: float | None = None  # rollouts only
+    se_double_take: float | None = None  # rollouts only
+    trials: int | None = None  # rollouts only
 
     @property
     def best_cube_action(self) -> str:
@@ -71,7 +76,7 @@ class CubeEval:
         a = self.proper_action.lower()
         if "too good" in a:
             return "too good"
-        if a.startswith("no double") or a.startswith("no redouble"):
+        if a.startswith(("no double", "no redouble")):
             return "no double"
         if "pass" in a:
             return "double/pass"
@@ -98,15 +103,46 @@ class StaticEval:
 
 
 @dataclass(frozen=True)
+class RolloutInfo:
+    """Provenance of a rollout: everything needed to reproduce or re-test it."""
+
+    trials: int  # requested; per-item ``trials`` say how many were played
+    seed: int | None
+    cubeful: bool
+    variance_reduction: bool
+    truncation: int | None  # plies, None = full rollout
+    jsd_stop: bool
+    jsd_limit: float | None
+    chequer_plies: int
+    cube_plies: int
+    engine_version: str | None = None
+
+    def to_dict(self) -> dict:
+        return {
+            "trials": self.trials,
+            "seed": self.seed,
+            "cubeful": self.cubeful,
+            "variance_reduction": self.variance_reduction,
+            "truncation": self.truncation,
+            "jsd_stop": self.jsd_stop,
+            "jsd_limit": self.jsd_limit,
+            "chequer_plies": self.chequer_plies,
+            "cube_plies": self.cube_plies,
+            "engine_version": self.engine_version,
+        }
+
+
+@dataclass(frozen=True)
 class Evaluation:
     position: Position
     kind: Kind
     engine: str
-    level: str  # human-readable, e.g. "gnubg 2-ply"
+    level: str  # human-readable, e.g. "gnubg 2-ply", "gnubg rollout"
     moves: list[MoveEval] = field(default_factory=list)
     cube: CubeEval | None = None
     static: StaticEval | None = None
     raw: str = ""  # engine's raw text, kept for debugging
+    rollout: RolloutInfo | None = None  # set when the numbers come from a rollout
 
     @property
     def best_move(self) -> MoveEval | None:
@@ -129,6 +165,8 @@ class Evaluation:
             "engine": self.engine,
             "level": self.level,
         }
+        if self.rollout is not None:
+            d["rollout"] = self.rollout.to_dict()
         if self.static is not None:
             s = self.static
             d["static"] = {
@@ -146,6 +184,9 @@ class Evaluation:
                     "error": m.error,
                     "ply": m.ply,
                     "probs": list(m.probs.as_tuple()) if m.probs else None,
+                    "se": m.se,
+                    "trials": m.trials,
+                    "cubeless_equity": m.cubeless_equity,
                 }
                 for m in self.moves
             ]
@@ -161,6 +202,9 @@ class Evaluation:
                 "cubeless_equity": c.cubeless_equity,
                 "probs": list(c.probs.as_tuple()) if c.probs else None,
                 "ply": c.ply,
+                "se_no_double": c.se_no_double,
+                "se_double_take": c.se_double_take,
+                "trials": c.trials,
             }
         return d
 
@@ -179,5 +223,23 @@ class Engine(Protocol):
         If the position has dice, this is a checker-play evaluation and
         ``moves`` is populated. If it has no dice (or a cube action is
         pending) it is a cube evaluation and ``cube`` is populated.
+        """
+        ...
+
+    def rollout(
+        self,
+        position: Position,
+        *,
+        moves: list[str] | None = None,
+        top: int = 2,
+        settings: object | None = None,
+    ) -> Evaluation:
+        """Roll out the decision the player on roll faces.
+
+        Checker play: roll out ``moves`` (engine move notation), or the
+        ``top`` moves by the engine's own ranking when ``moves`` is None.
+        Cube: roll out no-double against double/take. ``settings`` is
+        engine-specific; None means the engine's defaults. The result has
+        ``rollout`` set and ``se``/``trials`` filled in.
         """
         ...

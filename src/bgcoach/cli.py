@@ -1,8 +1,13 @@
 """Tiny CLI for poking at positions without an MCP client.
 
-    bgcoach show  XGID
-    bgcoach eval  XGID [--plies N]
-    bgcoach sweep XGID --var "label: op json" ...   (see README)
+    bgcoach show    XGID
+    bgcoach eval    XGID [--plies N]
+    bgcoach sweep   XGID --var "label: op json" ...   (see README)
+    bgcoach rollout XGID [--move M ...] [--top N] [--trials N] [--truncate P] [--seed S]
+    bgcoach study   XGID [--play M] [--reasoning TEXT] [--trials N] [--out DIR]
+
+``rollout`` and ``study`` print JSON; ``study`` also writes
+``studies/<date>-<slug>/study.{json,md}``.
 """
 
 from __future__ import annotations
@@ -14,6 +19,41 @@ import sys
 from bgcoach import analysis, perturb
 from bgcoach.engines import EngineError, get_engine
 from bgcoach.position import XGIDError, parse_xgid
+from bgcoach.study import run_study
+
+
+def _rollout_settings(args):
+    """Build gnubg RolloutSettings from CLI flags (None = engine defaults)."""
+    from bgcoach.engines.gnubg import RolloutSettings
+
+    kwargs = {}
+    if args.trials is not None:
+        kwargs["trials"] = args.trials
+    if args.truncate is not None:
+        kwargs["truncation"] = args.truncate
+    if args.seed is not None:
+        kwargs["seed"] = args.seed
+    if args.no_jsd_stop:
+        kwargs["jsd_stop"] = False
+    return RolloutSettings(**kwargs) if kwargs else None
+
+
+def _add_rollout_flags(parser) -> None:
+    parser.add_argument("--trials", type=int, default=None, help="games per rollout (default 1296)")
+    parser.add_argument(
+        "--truncate",
+        type=int,
+        default=None,
+        metavar="PLIES",
+        help="truncate each game after PLIES plies (default: play to the end)",
+    )
+    parser.add_argument("--seed", type=int, default=None)
+    parser.add_argument(
+        "--no-jsd-stop",
+        action="store_true",
+        help="disable early stopping when the candidates are settled",
+    )
+    parser.add_argument("--engine", default="gnubg")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -31,11 +71,38 @@ def main(argv: list[str] | None = None) -> int:
 
     w = sub.add_parser("sweep", help="evaluate a base and variants")
     w.add_argument("xgid")
-    w.add_argument("--var", action="append", default=[], metavar="LABEL=OPS_JSON",
-                   help='e.g. --var "no anchor=[{\\"op\\":\\"move\\",\\"player\\":1,\\"src\\":20,\\"dst\\":13}]"')
+    w.add_argument(
+        "--var",
+        action="append",
+        default=[],
+        metavar="LABEL=OPS_JSON",
+        help='e.g. --var "no anchor=[{\\"op\\":\\"move\\",\\"player\\":1,\\"src\\":20,\\"dst\\":13}]"',
+    )
     w.add_argument("--plies", type=int, default=2)
     w.add_argument("--engine", default="gnubg")
     w.add_argument("--workers", type=int, default=2)
+
+    r = sub.add_parser("rollout", help="roll out a checker play or cube decision (JSON)")
+    r.add_argument("xgid")
+    r.add_argument(
+        "--move",
+        action="append",
+        default=[],
+        metavar="MOVE",
+        help="candidate play in gnubg notation, repeatable; default: the top plays",
+    )
+    r.add_argument("--top", type=int, default=2, help="how many top plays to roll out (default 2)")
+    _add_rollout_flags(r)
+
+    st = sub.add_parser("study", help="evaluate, roll out, and save a study (JSON)")
+    st.add_argument("xgid")
+    st.add_argument("--play", default=None, help="the play or cube action you made")
+    st.add_argument("--reasoning", default=None, help="what you were thinking, in plain text")
+    st.add_argument("--plies", type=int, default=2)
+    st.add_argument("--top", type=int, default=2)
+    st.add_argument("--out", default="studies", help="studies root directory (default: studies)")
+    st.add_argument("--slug", default=None, help="folder name suffix (default: derived)")
+    _add_rollout_flags(st)
 
     args = ap.parse_args(argv)
     try:
@@ -68,7 +135,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[{ev.level}]")
         if ev.kind == "checker":
             for m in ev.moves:
-                p = f"  {m.probs.win:.3f} {m.probs.win_g:.3f} {m.probs.win_bg:.3f} - {m.probs.lose:.3f} {m.probs.lose_g:.3f} {m.probs.lose_bg:.3f}" if m.probs else ""
+                p = (
+                    f"  {m.probs.win:.3f} {m.probs.win_g:.3f} {m.probs.win_bg:.3f} - {m.probs.lose:.3f} {m.probs.lose_g:.3f} {m.probs.lose_bg:.3f}"
+                    if m.probs
+                    else ""
+                )
                 print(f"{m.rank:>3}. {m.move:<22} {m.equity:+.3f} ({m.error:+.3f}) {m.ply}{p}")
         elif ev.kind == "cube":
             c = ev.cube
@@ -82,8 +153,12 @@ def main(argv: list[str] | None = None) -> int:
             assert s is not None
             p = s.probs
             print("  No cube decision here (cube dead or owned by opponent).")
-            print(f"  {p.win:.3f} {p.win_g:.3f} {p.win_bg:.3f} - {p.lose:.3f} {p.lose_g:.3f} {p.lose_bg:.3f}")
-            print(f"  Cubeless {s.cubeless_equity:+.3f}   Cubeful {s.cubeful_equity:+.3f}   ({s.ply})")
+            print(
+                f"  {p.win:.3f} {p.win_g:.3f} {p.win_bg:.3f} - {p.lose:.3f} {p.lose_g:.3f} {p.lose_bg:.3f}"
+            )
+            print(
+                f"  Cubeless {s.cubeless_equity:+.3f}   Cubeful {s.cubeful_equity:+.3f}   ({s.ply})"
+            )
         return 0
 
     if args.cmd == "sweep":
@@ -102,6 +177,37 @@ def main(argv: list[str] | None = None) -> int:
             print(f"error: {err}", file=sys.stderr)
             return 1
         print(json.dumps(result.to_dict()["summary"], indent=2))
+        return 0
+
+    if args.cmd == "rollout":
+        try:
+            ev = engine.rollout(
+                pos, moves=args.move or None, top=args.top, settings=_rollout_settings(args)
+            )
+        except (EngineError, ValueError) as err:
+            print(f"error: {err}", file=sys.stderr)
+            return 1
+        print(json.dumps(ev.to_dict(), indent=2))
+        return 0
+
+    if args.cmd == "study":
+        try:
+            study = run_study(
+                engine,
+                pos,
+                play=args.play,
+                reasoning=args.reasoning,
+                plies=args.plies,
+                top=args.top,
+                settings=_rollout_settings(args),
+            )
+        except (EngineError, ValueError) as err:
+            print(f"error: {err}", file=sys.stderr)
+            return 1
+        folder = study.save(args.out, slug=args.slug)
+        data = study.to_dict()
+        data["saved_to"] = str(folder)
+        print(json.dumps(data, indent=2))
         return 0
 
     return 0

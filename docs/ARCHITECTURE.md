@@ -35,6 +35,8 @@ drives the position, which is the thing a human needs in order to generalise.
   experiment often needs a position that could not arise from the base by a legal play.
 - **engines/** returns one `Evaluation` type regardless of backend. Move lists, cube tables and
   probabilities are normalised there; raw engine text is kept on the object for debugging.
+- **study.py** assembles one study: the shallow candidate list, the rollout that settles it, and
+  the JSON/markdown files under `studies/`. The JSON is the seam the future app reads.
 - **analysis.py** runs a base plus N variants (optionally in parallel; gnubg is one process per
   call) and computes the deltas an analyst actually looks at: best-move equity change, whether the
   best move changed, take margin, double margin, whether the cube action changed.
@@ -60,5 +62,10 @@ backend doesn't touch the analyst layer.
 - gnubg's `hint` in match play prints normalised equity (we force `set output mwc off`). If a
   future gnubg prints MWC the move regex accepts `MWC:` and a `%` suffix, but the numbers would
   then be MWC, not equity; a test should catch this.
-- No rollouts yet. gnubg can do them (`rollout` after `hint`, with `set rollout ...` settings);
-  that's PLAN step 5.
+- Rollouts go through gnubg's analysis path (`analyse rollout move` / `analyse rollout cube`)
+  because the bare `rollout` command only handles the current position and prints nothing
+  without a tty. A checker rollout is therefore two gnubg runs: one to learn the ranks, one to
+  roll out. Dead-cube positions (no cube decision for the player on roll) cannot be rolled out
+  yet; `evaluate` still returns their static value.
+- Timing (4 cores, gnubg 1.08.003, defaults): ~100 s per rolled-out alternative. A study with the
+  design's cap of four confirmed variants is 15–25 minutes at 1296 trials.

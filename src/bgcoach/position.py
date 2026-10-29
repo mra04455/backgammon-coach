@@ -40,8 +40,8 @@ with beavers on.
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass, replace
-from typing import Iterator
 
 BOTTOM = 1
 TOP = -1
@@ -155,10 +155,10 @@ class Position:
     # Transformations (the perturbation library builds on these)
     # ------------------------------------------------------------------
 
-    def with_(self, **changes) -> "Position":
+    def with_(self, **changes) -> Position:
         return replace(self, **changes)
 
-    def mirror(self) -> "Position":
+    def mirror(self) -> Position:
         """The same position seen from the other side of the board.
 
         Swaps which player is "bottom": the board is reversed and negated,
@@ -365,6 +365,7 @@ def render_ascii(pos: Position) -> str:
 
     Bottom player is 'X' (moves toward point 1), top player is 'O'.
     """
+
     def col(point: int) -> list[str]:
         v = pos.board[point - 1]
         sym = "X" if v > 0 else "O"
@@ -381,8 +382,11 @@ def render_ascii(pos: Position) -> str:
 
     def header(points: list[int]) -> str:
         return (
-            " +" + "".join(f"{p:->3}" for p in points[:6])
-            + "-+---+" + "".join(f"{p:->3}" for p in points[6:]) + "-+"
+            " +"
+            + "".join(f"{p:->3}" for p in points[:6])
+            + "-+---+"
+            + "".join(f"{p:->3}" for p in points[6:])
+            + "-+"
         )
 
     def row_line(points: list[int], row: int, bar: str) -> str:
@@ -403,7 +407,9 @@ def render_ascii(pos: Position) -> str:
 
     who = "X (bottom)" if pos.turn == BOTTOM else "O (top)"
     if pos.cube_action:
-        action = {"D": "double offered", "B": "beaver offered", "R": "raccoon offered"}[pos.cube_action]
+        action = {"D": "double offered", "B": "beaver offered", "R": "raccoon offered"}[
+            pos.cube_action
+        ]
         dice = f"{action} by {who}"
     elif pos.dice:
         dice = f"{who} to play {pos.dice[0]}{pos.dice[1]}"
@@ -411,7 +417,9 @@ def render_ascii(pos: Position) -> str:
         dice = f"{who} on roll (cube decision)"
     owner = {0: "centered", BOTTOM: "owned by X", TOP: "owned by O"}[pos.cube_owner]
     if pos.is_money_game:
-        rules = "money game" + (", Jacoby" if pos.jacoby else "") + (", beavers" if pos.beaver else "")
+        rules = (
+            "money game" + (", Jacoby" if pos.jacoby else "") + (", beavers" if pos.beaver else "")
+        )
     else:
         rules = f"{pos.match_length}-pt match, X {pos.score[0]} - O {pos.score[1]}"
         if pos.crawford:

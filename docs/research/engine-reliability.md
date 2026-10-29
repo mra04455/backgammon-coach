@@ -1,6 +1,8 @@
 # gnubg engine reliability: when to trust a shallow evaluation
 
-Sources: gnubg manual source (`doc/gnubg/gnubg.texi`) and C source from the GitHub mirror, the pip `gnubg` 1.1.0a16 wheel (inspected statically), and analyst material via search summaries (bkgm.com, bgonline.org, extremegammon.com and gnu.org were blocked from direct fetch here, so those quotes are second-hand).
+Sources: gnubg manual source (`doc/gnubg/gnubg.texi`) and C source from the GitHub mirror, the pip `gnubg` 1.1.0a16 wheel (inspected statically), and analyst material via search summaries. When this note was written bkgm.com, bgonline.org, extremegammon.com and gnu.org were blocked from direct fetch, so those quotes are second-hand. As of 2026-10-29 bkgm.com and bgonline.org are reachable from the cloud environment; the quotes have not yet been re-checked against the pages.
+
+Correction (2026-10-29, checked in gnubg 1.08.003 source and binary): the rollout defaults in section 2 are right except for early stopping. `rcRollout` in `gnubg.c` has stop-on-STD, stop-on-JSD and move-stop-on-JSD all *off*; the 0.01 STD limit, 2.33 JSD limit and 324 minimum games are the values used once they are switched on. Also, `hint` labels the best move with the ply it was last scored at: when only one move survives the 1-ply filter, gnubg skips the final-ply pass and the "2-ply" hint reports a 1-ply number for it. The bgcoach driver avoids this with positive accept counts in its move filter.
 
 ## 1. Error of 0/2/3-ply versus rollouts, and weak position types
 

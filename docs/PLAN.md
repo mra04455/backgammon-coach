@@ -54,10 +54,19 @@ one-line note when done so the next session (or the chat side) can see where thi
 
 ## Step 5 — Rollouts
 
-- [ ] gnubg rollouts behind the same `Engine` interface: `rollout(position, trials=…, truncation=…)`
-      returning `Evaluation` with `ply="rollout"` plus confidence intervals. Used sparingly, as the
-      confirmer at the end of a sweep.
+- [x] gnubg rollouts behind the same `Engine` interface: `rollout(position, moves=…, top=…,
+      settings=RolloutSettings(...))` returning `Evaluation` with `ply="rollout"`, `se`, `trials`
+      and a `RolloutInfo` provenance block. Checker plays and cube decisions; pending doubles are
+      rolled out as the doubler's decision. Exposed as `bgcoach rollout` and the MCP `rollout` tool.
+      (2026-10-29: built gnubg 1.08.003 from source with `scripts/build-gnubg.sh`; measured ~100 s
+      per candidate at 1296 trials on 4 cores.)
+- [x] First end-to-end study: `bgcoach study XGID [--play] [--reasoning]` evaluates at 2-ply, rolls
+      out the top plays plus yours, and writes `studies/<date>-<slug>/study.{json,md}` with the
+      DESIGN.md schema (hypotheses, variants and account left for the analyst to fill).
 - [ ] Cache evaluations on disk keyed by (engine, settings, xgid) so re-runs are free.
+- [ ] Position-only rollouts for dead-cube positions (needs a pty, or the Python wheel).
+- [ ] Use the `gnubg` PyPI wheel for sweeps: verified importable on Python 3.13 here, 2-ply
+      `evaluate` about 20 ms cold. Would replace one subprocess per 2-ply evaluation.
 
 ## Step 6 — Hosting (only if local becomes the bottleneck)
 
