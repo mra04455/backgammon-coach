@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(scripts/build-gnubg.sh*)",
+      "Bash(bash scripts/build-gnubg.sh*)"
+    ]
+  }
+}
