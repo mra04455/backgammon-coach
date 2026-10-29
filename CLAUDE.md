@@ -19,7 +19,11 @@ put detail in those.
 - `src/bgcoach/analysis.py` — sweeps (base + variants, evaluated, deltas summarised).
 - `src/bgcoach/study.py` — a study: candidates at 2-ply, rollout verdict, `studies/<date>-<slug>/study.{json,md}`.
 - `src/bgcoach/mcp_server.py` — MCP tools: `show_position`, `perturb_position`, `evaluate`, `sweep`, `rollout`, `engines`.
-- `src/bgcoach/cli.py` — `bgcoach show|eval|sweep|rollout|study`; `rollout` and `study` emit JSON.
+- `src/bgcoach/cli.py` — `bgcoach show|eval|sweep|rollout|study|write`; the last three emit JSON.
+  `study` rolls out the original (extending close decisions to 5184 trials); `write` records the
+  analyst's hypotheses, variants and account and re-renders `study.md` from the JSON.
+- `.claude/skills/study/` — the analyst skill: `/study <XGID> [play] [reasoning]` runs the loop in
+  DESIGN.md (`SKILL.md` procedure, `knobs.md` feature edits, `style.md` voice and model paragraphs).
 - `scripts/build-gnubg.sh` — builds the gnubg CLI binary from source into `.gnubg/` (gitignored).
 - `tests/` — pytest; `tests/fixtures/` holds real gnubg 1.07 and 1.08 output the parser tests run against.
 

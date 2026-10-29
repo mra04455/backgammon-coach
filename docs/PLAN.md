@@ -37,12 +37,14 @@ one-line note when done so the next session (or the chat side) can see where thi
 
 ## Step 3 — Analyst skill
 
-- [ ] Add `.claude/skills/analyze-position/SKILL.md` encoding the loop as a procedure: how to read
-      the board, the hypothesis → variants → sweep → conclusion structure, the convention of
-      stating a prediction *before* running the sweep, and how to report confidence. Keep it
-      engine-agnostic.
-- [ ] Add a `report` helper (markdown) in `analysis.py` so the conclusion of a sweep has a stable
-      shape: position, hypothesis, variants with predicted vs observed deltas, verdict.
+- [x] `.claude/skills/study/` encodes the DESIGN.md loop: roll out the original first, hypothesis
+      with predictions before any sweep, 2-ply sweep with the 0.05 band and controls, refine,
+      confirm with at most four rollouts, write. `knobs.md` maps each expert feature to concrete
+      edits and lists where to start by position type; `style.md` carries the rules and model
+      paragraphs. (DESIGN.md says no confidence statements, so none are reported.)
+- [x] Stable report shape: `study.md` is rendered from `study.json` (`bgcoach write` records
+      hypotheses, variants and the account; the engine record is the collapsed section).
+- [ ] Run the skill on three positions the user knows well (Step 2) and fix what is awkward.
 
 ## Step 4 — Perturbation vocabulary
 
