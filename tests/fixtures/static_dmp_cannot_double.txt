@@ -1,0 +1,39 @@
+GNU Backgammon 1.07.001 20240331
+
+Copyright (C) 1999-2004 Gary Wong.
+Copyright (C) 2004-2022 the AUTHORS; for details type `show version'.
+
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show warranty'.
+This is free software, and you are welcome to redistribute it under certain conditions; type `show copying' for details.
+
+Locale is now 'C'
+Match evaluations will be shown as equivalent money equity.
+TTY boards will be given in ASCII.
+Moves for gnubg must now be entered manually.
+Moves for root must now be entered manually.
+`eval' and `hint' chequerplay will use 2 ply evaluation.
+`eval' and `hint' chequerplay will use cubeful evaluation.
+
+`eval' and `hint' cube decisions will use 2 ply evaluation.
+`eval' and `hint' cube decisions will use cubeful evaluation.
+
+A new session has been started.
+gnubg rolls 4, root rolls 1.
+
+
+
+
+
+Position ID:	4HPwATDgc/ABMA
+Match ID:	cAkgAAAAAAAE
+
+Evaluator: 	Contact
+
+
+        Win     W(g)    W(bg)   L(g)    L(bg)   Equity    Cubeful  
+static: 0.521   0.154   0.008   0.130   0.008   +0.043    +0.043    
+ 1 ply: 0.527   0.147   0.008   0.129   0.005   +0.053    +0.053    
+ 2 ply: 0.525   0.149   0.007   0.124   0.005   +0.050    +0.050    
+
+
+You cannot double.

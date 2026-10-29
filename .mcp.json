@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "bg-engine": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "bgcoach.mcp_server"],
+      "env": {
+        "BGCOACH_GNUBG": "gnubg"
+      }
+    }
+  }
+}
