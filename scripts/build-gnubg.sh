@@ -8,8 +8,15 @@
 #   default prefix: <repo>/.gnubg  (gitignored)
 #
 # Requires: git, gcc, make, autoconf, automake, pkg-config, bison, flex,
-#           glib-2.0 development headers.
+#           texinfo (makeinfo), gettext (msgfmt), glib-2.0 development headers.
+#   Debian/Ubuntu: apt-get install build-essential autoconf automake pkg-config \
+#                  bison flex texinfo gettext libglib2.0-dev
 set -euo pipefail
+
+for tool in git gcc make autoreconf automake pkg-config bison flex makeinfo msgfmt; do
+  command -v "$tool" >/dev/null 2>&1 || { echo "build-gnubg: missing required tool: $tool" >&2; exit 1; }
+done
+pkg-config --exists glib-2.0 || { echo "build-gnubg: missing glib-2.0 development headers" >&2; exit 1; }
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PREFIX="${1:-$REPO_ROOT/.gnubg}"
