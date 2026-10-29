@@ -1,0 +1,58 @@
+GNU Backgammon 1.07.001 20240331
+
+Copyright (C) 1999-2004 Gary Wong.
+Copyright (C) 2004-2022 the AUTHORS; for details type `show version'.
+
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show warranty'.
+This is free software, and you are welcome to redistribute it under certain conditions; type `show copying' for details.
+
+Locale is now 'C'
+Match evaluations will be shown as equivalent money equity.
+TTY boards will be given in ASCII.
+Moves for gnubg must now be entered manually.
+Moves for root must now be entered manually.
+`eval' and `hint' chequerplay will use 2 ply evaluation.
+`eval' and `hint' chequerplay will use cubeful evaluation.
+
+`eval' and `hint' cube decisions will use 2 ply evaluation.
+`eval' and `hint' cube decisions will use cubeful evaluation.
+
+A new session has been started.
+gnubg rolls 2, root rolls 3.
+
+
+
+
+
+
+Cube analysis
+2-ply cubeless equity -2.238 (Money: -2.039)
+  0.086 0.000 0.000 - 0.914 0.771 0.440
+Cubeful equities:
+1. No double           -2.058
+2. Double, pass        +1.000  (+3.058)
+3. Double, take        -2.430  (-0.372)
+Proper cube action: No double, take (10.9%)
+
+Position ID:	PgAAALYLBDMMAA
+Match ID:	cAmgADAAAAAE
+
+Evaluator: 	Crashed
+
+
+        Win     W(g)    W(bg)   L(g)    L(bg)   Equity    Cubeful  
+static: 0.072   0.000   0.000   0.754   0.303   -2.235    -2.095    
+ 1 ply: 0.083   0.000   0.000   0.728   0.411   -2.165    -2.009    
+ 2 ply: 0.086   0.000   0.000   0.771   0.440   -2.238    -2.058    
+
+
+
+Cube analysis
+2-ply cubeless equity -2.238 (Money: -2.039)
+  0.086 0.000 0.000 - 0.914 0.771 0.440
+Cubeful equities:
+1. No double           -2.058
+2. Double, pass        +1.000  (+3.058)
+3. Double, take        -2.430  (-0.372)
+Proper cube action: No double, take (10.9%)
+

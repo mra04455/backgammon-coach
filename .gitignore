@@ -1,2 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Engine scratch output
+.bgcoach/
+*.gnubg.out
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Claude Code local state (user-scoped settings stay out of the repo)
+.claude/settings.local.json
+
+# gnubg built from source by scripts/build-gnubg.sh
 .gnubg/
 .gnubg-build/
