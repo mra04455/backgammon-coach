@@ -5,9 +5,11 @@
     bgcoach sweep   XGID --var "label: op json" ...   (see README)
     bgcoach rollout XGID [--move M ...] [--top N] [--trials N] [--truncate P] [--seed S]
     bgcoach study   XGID [--play M] [--reasoning TEXT] [--trials N] [--out DIR]
+    bgcoach write   STUDY_DIR [--account FILE] [--hypotheses JSON] [--variants JSON]
 
-``rollout`` and ``study`` print JSON; ``study`` also writes
-``studies/<date>-<slug>/study.{json,md}``.
+``rollout``, ``study`` and ``write`` print JSON; ``study`` writes
+``studies/<date>-<slug>/study.{json,md}`` and ``write`` records the
+analyst's hypotheses, variants and account in it, re-rendering the markdown.
 """
 
 from __future__ import annotations
@@ -15,11 +17,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from pathlib import Path
 
 from bgcoach import analysis, perturb
 from bgcoach.engines import EngineError, get_engine
 from bgcoach.position import XGIDError, parse_xgid
-from bgcoach.study import run_study
+from bgcoach.study import EXTENDED_TRIALS, run_study, update_study
 
 
 def _rollout_settings(args):
@@ -102,9 +105,38 @@ def main(argv: list[str] | None = None) -> int:
     st.add_argument("--top", type=int, default=2)
     st.add_argument("--out", default="studies", help="studies root directory (default: studies)")
     st.add_argument("--slug", default=None, help="folder name suffix (default: derived)")
+    st.add_argument(
+        "--extend-trials",
+        type=int,
+        default=EXTENDED_TRIALS,
+        metavar="N",
+        help=f"re-roll a close decision at N trials (default {EXTENDED_TRIALS}; 0 disables)",
+    )
     _add_rollout_flags(st)
 
+    wr = sub.add_parser("write", help="record hypotheses, variants and the account in a study")
+    wr.add_argument("study_dir", help="the studies/<date>-<slug> folder (or its study.json)")
+    wr.add_argument(
+        "--account",
+        default=None,
+        metavar="FILE",
+        help="markdown file with the written account ('-' for stdin)",
+    )
+    wr.add_argument(
+        "--hypotheses",
+        default=None,
+        metavar="JSON",
+        help="JSON list of hypothesis objects, or @file",
+    )
+    wr.add_argument(
+        "--variants", default=None, metavar="JSON", help="JSON list of variant objects, or @file"
+    )
+
     args = ap.parse_args(argv)
+
+    if args.cmd == "write":
+        return _write(args)
+
     try:
         pos = parse_xgid(args.xgid)
     except XGIDError as err:
@@ -200,6 +232,7 @@ def main(argv: list[str] | None = None) -> int:
                 plies=args.plies,
                 top=args.top,
                 settings=_rollout_settings(args),
+                extend_trials=args.extend_trials or None,
             )
         except (EngineError, ValueError) as err:
             print(f"error: {err}", file=sys.stderr)
@@ -210,6 +243,45 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(data, indent=2))
         return 0
 
+    return 0
+
+
+def _json_arg(text: str | None):
+    if text is None:
+        return None
+    if text.startswith("@"):
+        text = Path(text[1:]).read_text()
+    value = json.loads(text)
+    if not isinstance(value, list):
+        raise ValueError("expected a JSON list")
+    return value
+
+
+def _write(args) -> int:
+    try:
+        account = None
+        if args.account is not None:
+            account = sys.stdin.read() if args.account == "-" else Path(args.account).read_text()
+        data = update_study(
+            args.study_dir,
+            hypotheses=_json_arg(args.hypotheses),
+            variants=_json_arg(args.variants),
+            account=account,
+        )
+    except (OSError, ValueError) as err:
+        print(f"error: {err}", file=sys.stderr)
+        return 2
+    print(
+        json.dumps(
+            {
+                "study": args.study_dir,
+                "hypotheses": len(data.get("hypotheses") or []),
+                "variants": len(data.get("variants") or []),
+                "account_chars": len(data.get("account") or ""),
+            },
+            indent=2,
+        )
+    )
     return 0
 
 

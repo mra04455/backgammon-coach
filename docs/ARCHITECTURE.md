@@ -54,8 +54,9 @@ backend doesn't touch the analyst layer.
 
 ## Known limits / open questions
 
-- XGID field 8 in money play (Jacoby bit 0, beaver bit 1) is implemented from the spec but not
-  yet confirmed against an XGID exported by XG with beavers on.
+- XGID field 8 in money play (Jacoby bit 0, beaver bit 1) is implemented from the spec and
+  confirmed against gnubg 1.08 (`set xgid` toggles its Jacoby and beaver settings accordingly),
+  but not yet against an XGID exported by XG with beavers on.
 - When the dice field is `D` (double offered), which player `turn` refers to has not been
   confirmed against XG. gnubg accepts the string and prints the doubler-side cube table either way,
   so `CubeEval.take_decision` is derived from that table rather than from `turn`.
