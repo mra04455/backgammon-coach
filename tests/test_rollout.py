@@ -213,3 +213,59 @@ def test_live_cube_rollout():
     pending = parse_xgid("XGID=-b----E-C---eE---c-e----B-:0:0:1:D:0:0:0:0:10")
     ev2 = eng.rollout(pending, settings=RolloutSettings(trials=36, seed=1, jsd_stop=False))
     assert ev2.kind == "cube" and ev2.position.cube_action is None
+
+
+OPP_OWNS_CUBE_NO_DICE = "XGID=-b----E-C---eE---c-e----B-:1:-1:1:00:0:0:0:0:10"
+OPP_OWNS_CUBE_31 = "XGID=-b----E-C---eE---c-e----B-:1:-1:1:31:0:0:0:0:10"
+
+
+def test_parse_static_rollout():
+    from bgcoach.engines.gnubg import parse_static_rollout
+
+    text = (FIX / "rollout_static_opp_cube_36.txt").read_text()
+    st = parse_static_rollout(text)
+    assert st is not None
+    assert st.ply == "rollout"
+    assert st.trials == 36
+    assert st.se is not None and 0 < st.se < 0.2
+    # Opponent owns a 2-cube: cubeful value is below the cubeless one.
+    assert st.cubeful_equity < st.cubeless_equity
+    assert st.probs.win + st.probs.lose == pytest.approx(1.0, abs=0.002)
+    # The last block wins over the intermediate progress tables.
+    assert text.count("Current Position:") >= 1
+    assert parse_static_rollout((FIX / "checker_2ply_money.txt").read_text()) is None
+
+
+def test_build_rollout_commands_static():
+    eng = _engine_without_binary()
+    cmds = eng.build_rollout_commands(
+        parse_xgid(OPP_OWNS_CUBE_NO_DICE),
+        settings=RolloutSettings(trials=36),
+        play=None,
+        ranks=None,
+        static=True,
+    )
+    assert cmds.splitlines()[-1] == "rollout"
+    with pytest.raises(ValueError):
+        eng.build_rollout_commands(
+            parse_xgid(OPP_OWNS_CUBE_NO_DICE),
+            settings=RolloutSettings(),
+            play="8/5 6/5",
+            ranks=[1],
+            static=True,
+        )
+
+
+@pytest.mark.skipif(find_gnubg() is None, reason="gnubg not installed")
+def test_live_rollouts_with_opponent_owning_the_cube():
+    eng = GnubgEngine()
+    rs = RolloutSettings(trials=36, seed=1, jsd_stop=False)
+    # Checker play: the ordinary path, cube ownership makes no difference.
+    ev = eng.rollout(parse_xgid(OPP_OWNS_CUBE_31), top=2, settings=rs)
+    assert ev.kind == "checker" and all(m.trials == 36 for m in ev.moves)
+    # No dice: no cube decision for the player on roll, so the position's value.
+    st = eng.rollout(parse_xgid(OPP_OWNS_CUBE_NO_DICE), settings=rs)
+    assert st.kind == "static" and st.static is not None
+    assert st.static.ply == "rollout" and st.static.trials == 36 and st.static.se is not None
+    assert st.rollout is not None and st.rollout.engine_version is not None
+    assert st.static.cubeful_equity < st.static.cubeless_equity

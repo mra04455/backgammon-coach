@@ -70,6 +70,8 @@ that reach an account.
   are rolled out via `move`, `previous`, `analyse move`, `analyse rollout move <ranks>`; cube
   decisions via `double`, `previous`, `analyse move`, `analyse rollout cube`. Ranks come from the
   analysed list, so `set analysis ...` must mirror `set evaluation ...` (`MoveFilter.commands`).
+  When the player on roll has no cube decision (opponent's cube, dead cube) the bare `rollout`
+  runs under a pseudo-terminal (`_run_under_pty`) and its `Current Position:` block is parsed.
 - gnubg starts with one calculation thread; the driver sets `set threads <cpu count>`.
 - gnubg ships with JSD/STD early stopping off; `RolloutSettings` turns JSD stopping on.
 - `set xgid` rejects a pending double (`:D:`); the driver rolls out the doubler's decision instead.

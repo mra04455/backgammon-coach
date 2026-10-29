@@ -117,3 +117,29 @@ def test_run_study_cube(tmp_path: Path):
     # Saving a second study with the same slug does not overwrite the first.
     other = Study(position=parse_xgid(OPENING_CUBE)).save(tmp_path, slug="opening cube")
     assert other != folder and other.exists()
+
+
+def test_run_study_static_position(tmp_path: Path):
+    from bgcoach.engines.base import StaticEval
+
+    class StaticEngine(FakeEngine):
+        def evaluate(self, position, *, plies=2):
+            st = StaticEval(P, 0.076, -0.086, "2-ply")
+            return Evaluation(position, "static", self.name, "fake 2-ply", static=st)
+
+        def rollout(self, position, *, moves=None, top=2, settings=None):
+            info = RolloutInfo(1296, 1, True, True, None, True, 2.33, 0, 2, "fake")
+            st = StaticEval(P, 0.064, -0.094, "rollout", se=0.012, trials=1296)
+            return Evaluation(
+                position, "static", self.name, "fake rollout", static=st, rollout=info
+            )
+
+    study = run_study(
+        StaticEngine(), parse_xgid("XGID=-b----E-C---eE---c-e----B-:1:-1:1:00:0:0:0:0:10")
+    )
+    assert study.decision == "position"
+    v = study.verdict()
+    assert v["cubeful_equity"] == -0.094 and v["se"] == 0.012 and v["trials"] == 1296
+    folder = study.save(tmp_path)
+    assert "Position value" in (folder / "study.md").read_text()
+    assert json.loads((folder / "study.json").read_text())["position"]["decision"] == "position"

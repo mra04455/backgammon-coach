@@ -64,7 +64,8 @@ one-line note when done so the next session (or the chat side) can see where thi
       out the top plays plus yours, and writes `studies/<date>-<slug>/study.{json,md}` with the
       DESIGN.md schema (hypotheses, variants and account left for the analyst to fill).
 - [ ] Cache evaluations on disk keyed by (engine, settings, xgid) so re-runs are free.
-- [ ] Position-only rollouts for dead-cube positions (needs a pty, or the Python wheel).
+- [x] Position-only rollouts for positions with no cube decision (opponent owns the cube, Crawford,
+      DMP): the bare `rollout` under a pseudo-terminal, parsed into `static` with `se`/`trials`.
 - [ ] Use the `gnubg` PyPI wheel for sweeps: verified importable on Python 3.13 here, 2-ply
       `evaluate` about 20 ms cold. Would replace one subprocess per 2-ply evaluation.
 

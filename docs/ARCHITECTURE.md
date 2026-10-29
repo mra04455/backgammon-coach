@@ -65,7 +65,7 @@ backend doesn't touch the analyst layer.
 - Rollouts go through gnubg's analysis path (`analyse rollout move` / `analyse rollout cube`)
   because the bare `rollout` command only handles the current position and prints nothing
   without a tty. A checker rollout is therefore two gnubg runs: one to learn the ranks, one to
-  roll out. Dead-cube positions (no cube decision for the player on roll) cannot be rolled out
-  yet; `evaluate` still returns their static value.
+  roll out. Positions with no cube decision for the player on roll (opponent owns the cube,
+  Crawford, DMP) use the bare `rollout` under a pseudo-terminal and come back as `static`.
 - Timing (4 cores, gnubg 1.08.003, defaults): ~100 s per rolled-out alternative. A study with the
   design's cap of four confirmed variants is 15–25 minutes at 1296 trials.

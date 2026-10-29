@@ -100,6 +100,8 @@ class StaticEval:
     cubeless_equity: float
     cubeful_equity: float
     ply: str
+    se: float | None = None  # standard error of ``cubeful_equity`` (rollouts only)
+    trials: int | None = None  # rollouts only
 
 
 @dataclass(frozen=True)
@@ -174,6 +176,8 @@ class Evaluation:
                 "cubeless_equity": s.cubeless_equity,
                 "probs": list(s.probs.as_tuple()),
                 "ply": s.ply,
+                "se": s.se,
+                "trials": s.trials,
             }
         if self.kind == "checker":
             d["moves"] = [
@@ -238,8 +242,11 @@ class Engine(Protocol):
 
         Checker play: roll out ``moves`` (engine move notation), or the
         ``top`` moves by the engine's own ranking when ``moves`` is None.
-        Cube: roll out no-double against double/take. ``settings`` is
-        engine-specific; None means the engine's defaults. The result has
-        ``rollout`` set and ``se``/``trials`` filled in.
+        Cube: roll out no-double against double/take. When the player on
+        roll has no cube decision (opponent owns the cube, Crawford, DMP)
+        the position's value is rolled out instead and ``static`` is
+        populated. ``settings`` is engine-specific; None means the engine's
+        defaults. The result has ``rollout`` set and ``se``/``trials``
+        filled in.
         """
         ...

@@ -229,7 +229,9 @@ def rollout(
     "24/23 13/10"; part order and "(2)" shorthand don't matter) or, if none
     are given, the ``top`` plays by 2-ply ranking. Cube (no dice): rolls out
     no-double against double/take; a pending double is rolled out as the
-    doubler's decision and the take verdict derived from it.
+    doubler's decision and the take verdict derived from it. If the player
+    on roll has no cube decision (opponent owns the cube, Crawford, DMP) the
+    position's value is rolled out and returned under ``static``.
 
     Defaults are gnubg's (1296 trials, cubeful, variance reduction, full
     length) plus JSD early stopping; a settled two-play decision stops after

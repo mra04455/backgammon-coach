@@ -31,7 +31,10 @@ Rollouts (gnubg 1.08, checked in the source):
    move``, ``analyse rollout cube``. Both print their results in command
    file mode. Ranks refer to the analysed move list, so a checker rollout
    is two passes: an evaluation to learn the ranks, then the rollout with
-   analysis settings mirroring the evaluation settings.
+   analysis settings mirroring the evaluation settings. When the player
+   on roll has no cube decision (the opponent owns the cube, or the cube
+   is dead) there is nothing to ``double``, so the bare ``rollout`` is
+   used after all, under a pseudo-terminal so that it prints.
 4. gnubg ships with JSD early stopping switched *off*; :class:`RolloutSettings`
    switches it on by default (DESIGN.md: "early stop when settled"). With
    a single alternative nothing can be compared, so a one-move rollout
@@ -45,6 +48,7 @@ from __future__ import annotations
 
 import os
 import re
+import select
 import shutil
 import subprocess
 import tempfile
@@ -201,6 +205,7 @@ _SD_RE = re.compile(
     r"\s+CL\s+(?P<cl>\d+\.\d+)(?:\s+CF\s+(?P<cf>\d+\.\d+))?\s*\]"
 )
 _GAMES_RE = re.compile(r"^\s*(?P<n>\d+) games,.*?seed (?P<seed>\d+)")
+_STATIC_HEADER = "Current Position:"
 _VERSION_RE = re.compile(r"^GNU Backgammon (?P<version>\S+)", re.MULTILINE)
 _CUBE_EQ_RE = re.compile(
     r"^\s*\d\.\s+(?P<label>No (?:re)?double|(?:Re)?[Dd]ouble, take|(?:Re)?[Dd]ouble, pass)\s+"
@@ -300,6 +305,7 @@ class GnubgEngine:
         settings: RolloutSettings,
         play: str | None,
         ranks: list[int] | None,
+        static: bool = False,
     ) -> str:
         """Command file for a rollout.
 
@@ -307,7 +313,8 @@ class GnubgEngine:
         record exists, step back, analyse it at ``analysis_plies`` with the
         same move filter as :meth:`build_commands`, then roll out the moves
         at ``ranks`` in that analysed list. Cube (both None): offer the
-        double, step back, analyse, roll out the cube decision.
+        double, step back, analyse, roll out the cube decision. Position
+        value (``static``): the bare ``rollout``; run it with a tty.
         """
         lines = [
             *self._prefix(),
@@ -316,7 +323,11 @@ class GnubgEngine:
             "new match 0",
             f"set xgid {position.xgid()}",
         ]
-        if play is not None:
+        if static:
+            if play is not None or ranks:
+                raise ValueError("a static rollout takes no play or ranks")
+            lines.append("rollout")
+        elif play is not None:
             if not ranks:
                 raise ValueError("ranks must be given with play")
             lines += [
@@ -329,14 +340,23 @@ class GnubgEngine:
             lines += ["double", "previous", "analyse move", "analyse rollout cube"]
         return "\n".join(lines) + "\n"
 
-    def run_raw(self, commands: str, *, timeout: float | None = None) -> str:
+    def run_raw(self, commands: str, *, timeout: float | None = None, tty: bool = False) -> str:
+        """Run gnubg on ``commands`` and return everything it printed.
+
+        ``tty`` runs it under a pseudo-terminal. gnubg prints rollout
+        progress and the bare ``rollout`` command's results only when
+        stdout is a terminal; nothing else in this module needs it.
+        """
         timeout = self.timeout if timeout is None else timeout
         with tempfile.TemporaryDirectory(prefix="bgcoach-gnubg-") as tmp:
             cmd_path = Path(tmp) / "commands.txt"
             cmd_path.write_text(commands)
+            argv = [self.binary, "-t", "-q", "-c", str(cmd_path)]
             try:
+                if tty:
+                    return _run_under_pty(argv, timeout)
                 proc = subprocess.run(
-                    [self.binary, "-t", "-q", "-c", str(cmd_path)],
+                    argv,
                     capture_output=True,
                     text=True,
                     timeout=timeout,
@@ -395,6 +415,10 @@ class GnubgEngine:
             return self._rollout_checker(position, moves, top, rs)
         if moves:
             raise ValueError("moves only apply to checker-play positions (with dice)")
+        # Does the player on roll have a cube decision at all? gnubg knows
+        # (opponent's cube, Crawford, dead cube in a short match); ask it.
+        if self.evaluate(position, plies=0).kind == "static":
+            return self._rollout_static(position, rs)
         return self._rollout_cube(position, rs)
 
     def _rollout_checker(
@@ -472,6 +496,25 @@ class GnubgEngine:
             self.name,
             f"gnubg rollout {rs.trials}",
             cube=cube,
+            raw=raw,
+            rollout=rs.info(parse_version(raw)),
+        )
+
+    def _rollout_static(self, position: Position, rs: RolloutSettings) -> Evaluation:
+        """Roll out the value of a position with no cube decision to make."""
+        commands = self.build_rollout_commands(
+            position, settings=rs, play=None, ranks=None, static=True
+        )
+        raw = self.run_raw(commands, timeout=self.rollout_timeout, tty=True)
+        static = parse_static_rollout(raw)
+        if static is None:
+            raise EngineError(_diagnose(raw, "no position rollout in gnubg output"))
+        return Evaluation(
+            position,
+            "static",
+            self.name,
+            f"gnubg rollout {rs.trials}",
+            static=static,
             raw=raw,
             rollout=rs.info(parse_version(raw)),
         )
@@ -640,6 +683,98 @@ def parse_cube_rollout(text: str) -> CubeEval | None:
         se_double_take=ses[1] if len(ses) > 1 else None,
         trials=trials,
     )
+
+
+def parse_static_rollout(text: str) -> StaticEval | None:
+    """Parse the bare ``rollout`` command's final result (tty output).
+
+    gnubg prints progress tables every tenth of the trials and the final
+    one after ``Rollout done``::
+
+        Rollout done. Printing final results.
+
+        Current Position:
+          0.520 0.142 0.008 - 0.480 0.120 0.005 CL +0.064 CF -0.094
+         [0.013 0.011 0.003 - 0.013 0.007 0.001 CL  0.035 CF  0.074] 1r
+        Full cubeful rollout with variance reduction
+        36 games, Mersenne Twister dice gen. with seed 1 and quasi-random dice
+
+    Only the last ``Current Position:`` block is read.
+    """
+    start = text.rfind(_STATIC_HEADER)
+    if start < 0:
+        return None
+    lines = text[start:].replace("\r", "").splitlines()[1:12]
+    probs = None
+    cubeless = None
+    cubeful = None
+    se = None
+    trials = None
+    for line in lines:
+        if probs is None and (m := _PROBS_RE.match(line)):
+            probs = Probs(*(float(x) for x in m.groups()[:6]))
+            if m.group("cl") is not None:
+                cubeless = float(m.group("cl"))
+            cubeful = float(m.group("cf")) if m.group("cf") is not None else cubeless
+        elif se is None and (m := _SD_RE.match(line)):
+            se = float(m.group("cf") or m.group("cl"))
+        elif trials is None and (m := _GAMES_RE.match(line)):
+            trials = int(m.group("n"))
+    if probs is None or cubeless is None or cubeful is None:
+        return None
+    return StaticEval(
+        probs=probs,
+        cubeless_equity=cubeless,
+        cubeful_equity=cubeful,
+        ply="rollout",
+        se=se,
+        trials=trials,
+    )
+
+
+def _run_under_pty(argv: list[str], timeout: float) -> str:
+    """Run ``argv`` with a pseudo-terminal as stdout/stderr and return its output.
+
+    POSIX only (``pty`` is unavailable on Windows); carriage returns from
+    gnubg's progress display are stripped.
+    """
+    import time
+
+    try:
+        import pty
+    except ImportError as e:  # pragma: no cover - Windows
+        raise EngineError(
+            "position rollouts need a pseudo-terminal, which is unavailable on this platform"
+        ) from e
+    master, slave = pty.openpty()
+    try:
+        proc = subprocess.Popen(
+            argv, stdout=slave, stderr=slave, stdin=subprocess.DEVNULL, close_fds=True
+        )
+    finally:
+        os.close(slave)
+    chunks: list[bytes] = []
+    deadline = time.monotonic() + timeout
+    try:
+        while True:
+            if time.monotonic() > deadline:
+                proc.kill()
+                raise subprocess.TimeoutExpired(argv, timeout)
+            ready, _, _ = select.select([master], [], [], 1.0)
+            if ready:
+                try:
+                    chunk = os.read(master, 65536)
+                except OSError:  # slave closed: gnubg exited
+                    break
+                if not chunk:
+                    break
+                chunks.append(chunk)
+            elif proc.poll() is not None:
+                break
+    finally:
+        os.close(master)
+        proc.wait()
+    return b"".join(chunks).decode("utf-8", errors="replace").replace("\r", "")
 
 
 def parse_version(text: str) -> str | None:

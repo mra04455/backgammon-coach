@@ -68,6 +68,8 @@ class Study:
             return "checker"
         if self.position.cube_action is not None:
             return "take"
+        if self.candidates is not None and self.candidates.kind == "static":
+            return "position"  # no decision for the player on roll; its value is the subject
         return "cube"
 
     # ------------------------------------------------------------------
@@ -125,6 +127,17 @@ class Study:
             if self.play is not None:
                 v["your_action"] = self.play
             return v
+        if ro.kind == "static":
+            s = ro.static
+            assert s is not None
+            return {
+                "note": "no cube decision for the player on roll; this is the position's value",
+                "cubeful_equity": s.cubeful_equity,
+                "cubeless_equity": s.cubeless_equity,
+                "se": s.se,
+                "trials": s.trials,
+                "win": s.probs.win,
+            }
         return {"status": f"unsupported rollout kind {ro.kind}"}
 
     def to_dict(self) -> dict[str, Any]:
@@ -212,6 +225,13 @@ class Study:
             out.append(f"- Double/take: {v['double_take']:+.3f}{fmt_se(v['se_double_take'])}")
             out.append(f"- Double/pass: {v['double_pass']:+.3f}")
             out.append(f"- Verdict: {v['action']}; taker should {v['take_decision']}.")
+        elif ro is not None and ro.kind == "static":
+            se = f" (SE {v['se']:.3f})" if v["se"] is not None else ""
+            out.append(
+                f"- Position value: {v['cubeful_equity']:+.3f} cubeful{se}, "
+                f"{v['cubeless_equity']:+.3f} cubeless; wins {v['win']:.0%}."
+            )
+            out.append("- No cube decision for the player on roll.")
         if self.candidates is not None and self.candidates.kind == "checker":
             out.append("")
             out.append(f"Candidates at {self.candidates.level}:")
@@ -298,9 +318,7 @@ def run_study(
             if all(_find_move(study.candidates, c) is not mine for c in chosen):
                 chosen.append(mine.move)
         study.rollout = engine.rollout(position, moves=chosen, settings=settings)
-    elif study.candidates.kind == "cube":
-        study.rollout = engine.rollout(position, settings=settings)
     else:
-        # Dead cube: the shallow evaluation is all the engine offers for now.
-        study.rollout = None
+        # Cube decision, or the position's value when there is no decision.
+        study.rollout = engine.rollout(position, settings=settings)
     return study
