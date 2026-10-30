@@ -1,0 +1,794 @@
+{
+  "schema": 1,
+  "bgcoach": "0.1.0",
+  "created": "2026-10-30T00:19:47+00:00",
+  "position": {
+    "xgid": "XGID=-a-B-CCBA-AAb---bbbcBa-b--:0:0:1:51:0:0:3:0:10",
+    "decision": "checker",
+    "on_roll": 1,
+    "pips": {
+      "bottom": 122,
+      "top": 124
+    },
+    "money_game": true,
+    "ascii": " +-13-14-15-16-17-18-+---+-19-20-21-22-23-24-+\n |          O  O  O  |   | O  X  O     O     |\n |          O  O  O  |   | O  X        O     |\n |                   |   | O                 |\n |                   |   |                   |\n |                   |   |                   |\n |                   |BAR|                   |\n |                   |   |                   |\n |                   |   |                   |\n |                   |   | X  X              |\n | O              X  |   | X  X     X        |\n | O  X  X     X  X  |   | X  X     X     O  |\n +-12-11-10--9--8--7-+---+--6--5--4--3--2--1-+\n X (bottom) to play 51. Cube 1 (centered). money game, Jacoby, beavers.\n Pips: X 122, O 124. Off: X 0, O 0.\n XGID=-a-B-CCBA-AAb---bbbcBa-b--:0:0:1:51:0:0:3:0:10"
+  },
+  "your_play": "10/5 8/7",
+  "your_reasoning": "I wanted to bring a checker home efficiently and minimize shots",
+  "candidates": {
+    "xgid": "XGID=-a-B-CCBA-AAb---bbbcBa-b--:0:0:1:51:0:0:3:0:10",
+    "kind": "checker",
+    "engine": "gnubg",
+    "level": "gnubg 2-ply",
+    "moves": [
+      {
+        "rank": 1,
+        "move": "11/6 8/7",
+        "equity": 0.598,
+        "error": 0.0,
+        "ply": "2-ply",
+        "probs": [
+          0.637,
+          0.162,
+          0.003,
+          0.363,
+          0.044,
+          0.001
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 2,
+        "move": "11/10 8/3",
+        "equity": 0.571,
+        "error": -0.027,
+        "ply": "2-ply",
+        "probs": [
+          0.638,
+          0.164,
+          0.003,
+          0.362,
+          0.048,
+          0.001
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 3,
+        "move": "11/5",
+        "equity": 0.565,
+        "error": -0.033,
+        "ply": "2-ply",
+        "probs": [
+          0.628,
+          0.169,
+          0.004,
+          0.372,
+          0.053,
+          0.002
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 4,
+        "move": "11/6 10/9",
+        "equity": 0.556,
+        "error": -0.042,
+        "ply": "2-ply",
+        "probs": [
+          0.624,
+          0.165,
+          0.004,
+          0.376,
+          0.052,
+          0.002
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 5,
+        "move": "10/4",
+        "equity": 0.491,
+        "error": -0.107,
+        "ply": "2-ply",
+        "probs": [
+          0.614,
+          0.174,
+          0.004,
+          0.386,
+          0.08,
+          0.003
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 6,
+        "move": "11/6 5/4",
+        "equity": 0.466,
+        "error": -0.132,
+        "ply": "2-ply",
+        "probs": [
+          0.615,
+          0.173,
+          0.004,
+          0.385,
+          0.077,
+          0.003
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 7,
+        "move": "10/5 8/7",
+        "equity": 0.458,
+        "error": -0.14,
+        "ply": "2-ply",
+        "probs": [
+          0.616,
+          0.15,
+          0.003,
+          0.384,
+          0.048,
+          0.001
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 8,
+        "move": "10/9 8/3",
+        "equity": 0.441,
+        "error": -0.157,
+        "ply": "2-ply",
+        "probs": [
+          0.612,
+          0.162,
+          0.003,
+          0.388,
+          0.058,
+          0.002
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 9,
+        "move": "11/10 6/1*",
+        "equity": 0.41,
+        "error": -0.188,
+        "ply": "2-ply",
+        "probs": [
+          0.576,
+          0.207,
+          0.005,
+          0.424,
+          0.076,
+          0.003
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 10,
+        "move": "8/3 6/5",
+        "equity": 0.32,
+        "error": -0.278,
+        "ply": "2-ply",
+        "probs": [
+          0.586,
+          0.146,
+          0.003,
+          0.414,
+          0.059,
+          0.002
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      }
+    ]
+  },
+  "rollout": {
+    "xgid": "XGID=-a-B-CCBA-AAb---bbbcBa-b--:0:0:1:51:0:0:3:0:10",
+    "kind": "checker",
+    "engine": "gnubg",
+    "level": "gnubg rollout 5184",
+    "rollout": {
+      "trials": 5184,
+      "seed": 20261030,
+      "cubeful": true,
+      "variance_reduction": true,
+      "truncation": null,
+      "jsd_stop": true,
+      "jsd_limit": 2.33,
+      "chequer_plies": 0,
+      "cube_plies": 2,
+      "engine_version": "1.08.003"
+    },
+    "moves": [
+      {
+        "rank": 1,
+        "move": "11/6 8/7",
+        "equity": 0.604,
+        "error": 0.0,
+        "ply": "rollout",
+        "probs": [
+          0.644,
+          0.162,
+          0.003,
+          0.356,
+          0.047,
+          0.002
+        ],
+        "se": 0.005,
+        "trials": 5184,
+        "cubeless_equity": 0.404
+      },
+      {
+        "rank": 2,
+        "move": "11/10 8/3",
+        "equity": 0.594,
+        "error": -0.01,
+        "ply": "rollout",
+        "probs": [
+          0.644,
+          0.167,
+          0.003,
+          0.356,
+          0.051,
+          0.002
+        ],
+        "se": 0.005,
+        "trials": 5184,
+        "cubeless_equity": 0.405
+      },
+      {
+        "rank": 3,
+        "move": "10/5 8/7",
+        "equity": 0.48,
+        "error": -0.124,
+        "ply": "rollout",
+        "probs": [
+          0.623,
+          0.151,
+          0.003,
+          0.377,
+          0.05,
+          0.002
+        ],
+        "se": 0.019,
+        "trials": 325,
+        "cubeless_equity": 0.346
+      }
+    ]
+  },
+  "superseded_rollouts": [
+    {
+      "xgid": "XGID=-a-B-CCBA-AAb---bbbcBa-b--:0:0:1:51:0:0:3:0:10",
+      "kind": "checker",
+      "engine": "gnubg",
+      "level": "gnubg rollout 1296",
+      "rollout": {
+        "trials": 1296,
+        "seed": 20261030,
+        "cubeful": true,
+        "variance_reduction": true,
+        "truncation": null,
+        "jsd_stop": true,
+        "jsd_limit": 2.33,
+        "chequer_plies": 0,
+        "cube_plies": 2,
+        "engine_version": "1.08.003"
+      },
+      "moves": [
+        {
+          "rank": 1,
+          "move": "11/6 8/7",
+          "equity": 0.594,
+          "error": 0.0,
+          "ply": "rollout",
+          "probs": [
+            0.642,
+            0.163,
+            0.003,
+            0.358,
+            0.047,
+            0.002
+          ],
+          "se": 0.01,
+          "trials": 1296,
+          "cubeless_equity": 0.401
+        },
+        {
+          "rank": 2,
+          "move": "11/10 8/3",
+          "equity": 0.588,
+          "error": -0.006,
+          "ply": "rollout",
+          "probs": [
+            0.643,
+            0.167,
+            0.003,
+            0.357,
+            0.051,
+            0.002
+          ],
+          "se": 0.009,
+          "trials": 1296,
+          "cubeless_equity": 0.404
+        },
+        {
+          "rank": 3,
+          "move": "10/5 8/7",
+          "equity": 0.479,
+          "error": -0.115,
+          "ply": "rollout",
+          "probs": [
+            0.622,
+            0.152,
+            0.003,
+            0.378,
+            0.05,
+            0.002
+          ],
+          "se": 0.019,
+          "trials": 325,
+          "cubeless_equity": 0.346
+        }
+      ]
+    }
+  ],
+  "verdict": {
+    "best_play": "11/6 8/7",
+    "best_equity": 0.604,
+    "best_se": 0.005,
+    "close": true,
+    "plays": [
+      {
+        "move": "11/6 8/7",
+        "equity": 0.604,
+        "error": 0.0,
+        "se": 0.005,
+        "trials": 5184,
+        "size": "level"
+      },
+      {
+        "move": "11/10 8/3",
+        "equity": 0.594,
+        "error": -0.01,
+        "se": 0.005,
+        "trials": 5184,
+        "size": "level"
+      },
+      {
+        "move": "10/5 8/7",
+        "equity": 0.48,
+        "error": -0.124,
+        "se": 0.019,
+        "trials": 325,
+        "size": "blunder"
+      }
+    ],
+    "your_play": {
+      "move": "10/5 8/7",
+      "equity": 0.48,
+      "error": -0.124,
+      "size": "blunder",
+      "is_best": false
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "feature": "cost of being hit (O's board strength, X's 20-point anchor)",
+      "claim": "Shot-counting is the wrong lens here. O's home board is two points and a blot, and X holds the 20-point anchor, so a hit costs X little. What decides the play is bear-in structure: which straggler is left behind (the 10-point checker reaches safety with 3s, 4s, 5s and 6s; the 11-point checker only with 4s, 5s and 6s) and where the spares sit for making the 4-point.",
+      "predictions": [
+        {
+          "variant": "O's board strong (4-pt and 3-pt made)",
+          "direction": "10/5 8/7 gains on 11/6 8/7",
+          "size": "gap narrows by 0.05 or more"
+        },
+        {
+          "variant": "X without the 20-point anchor",
+          "direction": "10/5 8/7 gains on 11/6 8/7",
+          "size": "gap narrows by 0.05 or more"
+        },
+        {
+          "variant": "both: strong O board and no anchor",
+          "direction": "10/5 8/7 gains strongly",
+          "size": "gap closes or flips"
+        },
+        {
+          "variant": "race: O +8 pips forward, structure unchanged",
+          "direction": "none",
+          "size": "control, inside 0.05"
+        }
+      ],
+      "status": "failed: a four-point board for O (or covering its blot) left the gap unchanged at 2-ply; the no-anchor variants saturated near +1.0 and could not be read. Revised to H2."
+    },
+    {
+      "id": "H2",
+      "feature": "making the 4-point against O's last checker (builders and spares)",
+      "claim": "O's last checker sits on X's ace point and X holds 3, 5, 6 and 7. Making the 4-point gives a five-point block that all but traps it, which is where X's gammons and the closeout come from. 11/6 8/7 keeps the 10-point checker as a direct builder (6s) and puts a spare on the 6-point (2s), so 15 of 36 rolls make the 4-point next turn; 10/5 8/7 spends the builder on a fourth checker on the 5-point, which makes the 4-point only with 1s, and 9 of 36 rolls do it. The two extra shots 11/6 8/7 leaves are cheap because O's board is weak and X has the 20-point anchor.",
+      "predictions": [
+        {
+          "variant": "X 4-point made",
+          "direction": "gap collapses",
+          "size": "to level"
+        },
+        {
+          "variant": "O's board strong",
+          "direction": "none",
+          "size": "control, inside 0.05"
+        },
+        {
+          "variant": "race: O +8 pips",
+          "direction": "none",
+          "size": "control, inside 0.05"
+        }
+      ],
+      "status": "held; confirmed by rollout (4-point made: plays level at 1296 trials; O board strong: gap 0.146 at 325 trials; race control inside 0.05 at 2-ply)"
+    }
+  ],
+  "variants": [
+    {
+      "label": "O board strong (4-pt and 3-pt made)",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": -1,
+          "src": 9,
+          "dst": 4
+        },
+        {
+          "op": "move_point",
+          "player": -1,
+          "src": 8,
+          "dst": 3
+        }
+      ],
+      "xgid": "XGID=-a-B-CCBA-AAb-----bcBcbb--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 122,
+        "O": 104
+      },
+      "what_moved": "O's 9-point pair covers the 4-point blot (3 there), O's 8-point pair makes the 3-point; O gives up both outfield points and gains 20 pips (124 -> 104).",
+      "prediction": {
+        "H1": "gap narrows by 0.05 or more",
+        "H2": "no effect"
+      },
+      "observed_2ply": {
+        "11/6 8/7": 0.378,
+        "10/5 8/7": 0.249,
+        "gap": 0.129,
+        "gap_shift_vs_base": -0.011,
+        "best_play": "11/10 8/3",
+        "best_equity": 0.38
+      },
+      "holds": {
+        "H1": false,
+        "H2": true
+      },
+      "rollout": {
+        "level": "gnubg rollout 1296",
+        "settings": {
+          "trials": 1296,
+          "seed": 20261030,
+          "cubeful": true,
+          "variance_reduction": true,
+          "truncation": null,
+          "jsd_stop": true,
+          "jsd_limit": 2.33,
+          "chequer_plies": 0,
+          "cube_plies": 2,
+          "engine_version": "1.08.003"
+        },
+        "plays": [
+          {
+            "move": "11/6 8/7",
+            "equity": 0.402,
+            "se": 0.016,
+            "trials": 327,
+            "error": 0.0,
+            "probs": [
+              0.6,
+              0.115,
+              0.003,
+              0.4,
+              0.055,
+              0.002
+            ]
+          },
+          {
+            "move": "10/5 8/7",
+            "equity": 0.256,
+            "se": 0.013,
+            "trials": 325,
+            "error": -0.146,
+            "probs": [
+              0.567,
+              0.097,
+              0.003,
+              0.433,
+              0.057,
+              0.002
+            ]
+          }
+        ]
+      },
+      "confirmed": "gap persists: 11/6 8/7 +0.402, 10/5 8/7 +0.256 (0.146, joint SE 0.021)"
+    },
+    {
+      "label": "X without the 20-point anchor",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 20,
+          "dst": 9
+        }
+      ],
+      "xgid": "XGID=-a-B-CCBABAAb---bbbc-a-b--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 100,
+        "O": 124
+      },
+      "what_moved": "X's anchor pair becomes a 9-point; X gains 22 pips and a five-point block. Equities saturate near +1.0: X is cashing, so the comparison is unreadable.",
+      "prediction": {
+        "H1": "gap narrows by 0.05 or more"
+      },
+      "observed_2ply": {
+        "11/6 8/7": 0.948,
+        "10/5 8/7": 1.0,
+        "gap": -0.052,
+        "gap_shift_vs_base": -0.192,
+        "best_play": "9/4 5/4",
+        "best_equity": 1.0
+      },
+      "holds": {
+        "H1": null
+      },
+      "note": "discarded as a test",
+      "degenerate": true
+    },
+    {
+      "label": "both: strong O board and no anchor",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": -1,
+          "src": 9,
+          "dst": 4
+        },
+        {
+          "op": "move_point",
+          "player": -1,
+          "src": 8,
+          "dst": 3
+        },
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 20,
+          "dst": 9
+        }
+      ],
+      "xgid": "XGID=-a-B-CCBABAAb-----bc-cbb--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 100,
+        "O": 104
+      },
+      "what_moved": "Combination of the two above; equities saturate near +1.0.",
+      "prediction": {
+        "H1": "gap closes or flips"
+      },
+      "observed_2ply": {
+        "11/6 8/7": 0.89,
+        "10/5 8/7": 0.963,
+        "gap": -0.073,
+        "gap_shift_vs_base": -0.213,
+        "best_play": "11/10 8/3",
+        "best_equity": 0.985
+      },
+      "holds": {
+        "H1": null
+      },
+      "note": "discarded as a test",
+      "degenerate": true
+    },
+    {
+      "label": "race control: O +8 pips",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": -1,
+          "src": 13,
+          "dst": 9
+        }
+      ],
+      "xgid": "XGID=-a-B-CCBA-AA----dbbcBa-b--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 122,
+        "O": 116
+      },
+      "what_moved": "O's midpoint pair moves to the 9-point (4 on it); O 124 -> 116 pips; no board or blot changes.",
+      "prediction": {
+        "H1": "control, no effect",
+        "H2": "control, no effect"
+      },
+      "observed_2ply": {
+        "11/6 8/7": 0.457,
+        "10/5 8/7": 0.342,
+        "gap": 0.115,
+        "gap_shift_vs_base": -0.025,
+        "best_play": "11/6 8/7",
+        "best_equity": 0.457
+      },
+      "holds": {
+        "H1": true,
+        "H2": true
+      }
+    },
+    {
+      "label": "X 4-point made (from the 3-point)",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 3,
+          "dst": 4
+        }
+      ],
+      "xgid": "XGID=-a--BCCBA-AAb---bbbcBa-b--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 124,
+        "O": 124
+      },
+      "what_moved": "X's 3-point pair becomes the 4-point: X board 4-5-6-7, 3-point open; X 122 -> 124 pips. Best play becomes 10/4.",
+      "prediction": {
+        "H2": "gap collapses: the 4-point is already made, so the builder on 10 and the spare on 6 lose their purpose"
+      },
+      "observed_2ply": {
+        "11/6 8/7": 0.662,
+        "10/5 8/7": 0.682,
+        "gap": -0.02,
+        "gap_shift_vs_base": -0.16,
+        "best_play": "10/4",
+        "best_equity": 0.768
+      },
+      "holds": {
+        "H2": true
+      },
+      "rollout": {
+        "level": "gnubg rollout 1296",
+        "settings": {
+          "trials": 1296,
+          "seed": 20261030,
+          "cubeful": true,
+          "variance_reduction": true,
+          "truncation": null,
+          "jsd_stop": true,
+          "jsd_limit": 2.33,
+          "chequer_plies": 0,
+          "cube_plies": 2,
+          "engine_version": "1.08.003"
+        },
+        "plays": [
+          {
+            "move": "10/5 8/7",
+            "equity": 0.678,
+            "se": 0.01,
+            "trials": 1296,
+            "error": 0.0,
+            "probs": [
+              0.661,
+              0.17,
+              0.004,
+              0.339,
+              0.048,
+              0.002
+            ]
+          },
+          {
+            "move": "11/6 8/7",
+            "equity": 0.67,
+            "se": 0.01,
+            "trials": 1296,
+            "error": -0.008,
+            "probs": [
+              0.66,
+              0.17,
+              0.004,
+              0.34,
+              0.047,
+              0.002
+            ]
+          }
+        ]
+      },
+      "confirmed": "level: 10/5 8/7 +0.678, 11/6 8/7 +0.670, joint SE 0.014"
+    },
+    {
+      "label": "O covers the 4-point blot only",
+      "operations": [
+        {
+          "op": "move",
+          "player": -1,
+          "src": 9,
+          "dst": 4
+        }
+      ],
+      "xgid": "XGID=-a-B-CCBA-AAb---abbcBb-b--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 122,
+        "O": 119
+      },
+      "what_moved": "One checker from O's 9-point covers the blot on O's 4-point; O's 9-point becomes a blot; O 124 -> 119.",
+      "prediction": {
+        "H1": "gap narrows",
+        "H2": "no effect"
+      },
+      "observed_2ply": {
+        "11/6 8/7": 0.553,
+        "10/5 8/7": 0.449,
+        "gap": 0.104,
+        "gap_shift_vs_base": -0.036,
+        "best_play": "11/10 8/3",
+        "best_equity": 0.556
+      },
+      "holds": {
+        "H1": false,
+        "H2": true
+      }
+    },
+    {
+      "label": "O's back checker escaped to the midpoint",
+      "operations": [
+        {
+          "op": "move",
+          "player": -1,
+          "src": 24,
+          "dst": 13
+        }
+      ],
+      "xgid": "XGID=---B-CCBA-AAc---bbbcBa-b--:0:0:1:51:0:0:3:0:10",
+      "pips": {
+        "X": 122,
+        "O": 113
+      },
+      "what_moved": "O's checker on X's ace point joins O's midpoint; O 124 -> 113. No contact remains behind X's outfield checkers; the game becomes a race X trails and neither candidate play appears in the top ten.",
+      "prediction": {
+        "H2": "gap collapses"
+      },
+      "observed_2ply": {
+        "11/6 8/7": null,
+        "10/5 8/7": null,
+        "gap": null,
+        "gap_shift_vs_base": null,
+        "best_play": "10/9 7/2",
+        "best_equity": -0.413
+      },
+      "holds": {
+        "H2": null
+      },
+      "note": "unreadable: the position changed character (pure race)",
+      "degenerate": true
+    }
+  ],
+  "account": "This position is about the 4-point. O's last checker sits on your ace point, and you already hold the 3, 5, 6 and 7-points. Make the 4-point and you have a five-point block that all but traps that checker: the only way out is a 1 followed by a 6, and meanwhile you are closing out, winning gammons and cashing the cube. Everything about this 5-1 should serve that goal, and the checker that serves it best is the one on your 10-point, which makes the 4-point with any 6. 10/5 8/7 spends that checker on a fourth man on the 5-point, where it only makes the 4-point with 1s. It is a blunder, costing about an eighth of a point. The right plays keep the 10-point checker in the fight.\n\nThe best play is 11/6 8/7. The spare it adds to the 6-point makes the 4-point with 2s, the spare already on the 7-point makes it with 3s, and the 10-point checker makes it with 6s, so about two rolls in five make the 4-point next turn, against one in four after your play. The price is a blot on the 10-point that O hits with 6-3, about one roll in twenty, and with a weak two-point board facing your 20-point anchor the hit costs you little even when it lands.\n\n11/10 8/3 is just as good, and it is the play your instinct was reaching for. It makes the 10-point, leaves no blot anywhere, keeps two checkers aimed at the 4-point with 6s, and the point itself blocks the escaping checker's 9s. It makes the 4-point a little less often than 11/6 8/7, about one roll in five, but takes no risk at all and gets a useful outfield point for free. The two plays are level; pick by temperament.\n\nYour reasoning weighted the wrong feature. Minimising shots was not a bad instinct, but it was already free: your blot on the 11-point cannot be hit, and 11/10 8/3 is safer still. What your play gave up was not safety but purpose. A fourth checker on the 5-point is the least useful checker on the board, and the 10-point checker it came from was your best builder. Efficiency in a bear-in means bringing checkers to where they do work, not to where they are safe. The lesson travels: when the opponent has one checker left behind a four-point block, the next point matters more than a shot or two, as long as the hit is cheap. That rule stops working when the opponent's board is strong, because then a hit turns into a lost game rather than a delay, and when you have no anchor to fall back on.\n"
+}
