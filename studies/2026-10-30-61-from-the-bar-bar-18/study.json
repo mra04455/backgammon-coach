@@ -1,0 +1,1118 @@
+{
+  "schema": 1,
+  "bgcoach": "0.1.0",
+  "created": "2026-10-30T14:39:00+00:00",
+  "position": {
+    "xgid": "XGID=a-BCB-B-B---bD---bbcbab---:0:0:-1:61:0:0:3:0:10",
+    "decision": "checker",
+    "on_roll": -1,
+    "pips": {
+      "bottom": 101,
+      "top": 119
+    },
+    "money_game": true,
+    "ascii": " +-13-14-15-16-17-18-+---+-19-20-21-22-23-24-+\n | X           O  O  | O | O  O  O  O        |\n | X           O  O  |   | O  O     O        |\n | X                 |   | O                 |\n | X                 |   |                   |\n |                   |   |                   |\n |                   |BAR|                   |\n |                   |   |                   |\n |                   |   |                   |\n |                   |   |          X        |\n | O           X     |   | X     X  X  X     |\n | O           X     |   | X     X  X  X     |\n +-12-11-10--9--8--7-+---+--6--5--4--3--2--1-+\n O (top) to play 61. Cube 1 (centered). money game, Jacoby, beavers.\n Pips: X 101, O 119. Off: X 0, O 0.\n XGID=a-BCB-B-B---bD---bbcbab---:0:0:-1:61:0:0:3:0:10"
+  },
+  "your_play": "bar/18",
+  "your_reasoning": "My opponent's strategic objective is to unstack his midpoint so he can break contact and race. This play controls my opponent's outfield, making it harder for him to safely unstack his midpoint, and as a secondary benefit is more efficient race-wise than bar/24 with 8/2 or 7/1.",
+  "candidates": {
+    "xgid": "XGID=a-BCB-B-B---bD---bbcbab---:0:0:-1:61:0:0:3:0:10",
+    "kind": "checker",
+    "engine": "gnubg",
+    "level": "gnubg 2-ply",
+    "moves": [
+      {
+        "rank": 1,
+        "move": "bar/24 8/2",
+        "equity": -0.657,
+        "error": 0.0,
+        "ply": "2-ply",
+        "probs": [
+          0.301,
+          0.038,
+          0.001,
+          0.699,
+          0.069,
+          0.002
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 2,
+        "move": "bar/24 7/1",
+        "equity": -0.75,
+        "error": -0.093,
+        "ply": "2-ply",
+        "probs": [
+          0.286,
+          0.038,
+          0.001,
+          0.714,
+          0.08,
+          0.002
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 3,
+        "move": "bar/24 13/7",
+        "equity": -0.949,
+        "error": -0.292,
+        "ply": "2-ply",
+        "probs": [
+          0.26,
+          0.034,
+          0.001,
+          0.74,
+          0.115,
+          0.003
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 4,
+        "move": "bar/18",
+        "equity": -0.959,
+        "error": -0.302,
+        "ply": "2-ply",
+        "probs": [
+          0.256,
+          0.031,
+          0.001,
+          0.744,
+          0.11,
+          0.001
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      }
+    ]
+  },
+  "rollout": {
+    "xgid": "XGID=a-BCB-B-B---bD---bbcbab---:0:0:-1:61:0:0:3:0:10",
+    "kind": "checker",
+    "engine": "gnubg",
+    "level": "gnubg rollout 1296",
+    "rollout": {
+      "trials": 1296,
+      "seed": 20261030,
+      "cubeful": true,
+      "variance_reduction": true,
+      "truncation": null,
+      "jsd_stop": true,
+      "jsd_limit": 2.33,
+      "chequer_plies": 0,
+      "cube_plies": 2,
+      "engine_version": "1.08.003"
+    },
+    "moves": [
+      {
+        "rank": 1,
+        "move": "bar/24 8/2",
+        "equity": -0.747,
+        "error": 0.0,
+        "ply": "rollout",
+        "probs": [
+          0.291,
+          0.036,
+          0.0,
+          0.709,
+          0.064,
+          0.001
+        ],
+        "se": 0.015,
+        "trials": 327,
+        "cubeless_equity": -0.447
+      },
+      {
+        "rank": 2,
+        "move": "bar/24 7/1",
+        "equity": -0.821,
+        "error": -0.074,
+        "ply": "rollout",
+        "probs": [
+          0.278,
+          0.032,
+          0.001,
+          0.722,
+          0.078,
+          0.002
+        ],
+        "se": 0.016,
+        "trials": 327,
+        "cubeless_equity": -0.491
+      },
+      {
+        "rank": 3,
+        "move": "bar/18",
+        "equity": -1.029,
+        "error": -0.282,
+        "ply": "rollout",
+        "probs": [
+          0.249,
+          0.03,
+          0.001,
+          0.751,
+          0.112,
+          0.001
+        ],
+        "se": 0.017,
+        "trials": 325,
+        "cubeless_equity": -0.584
+      }
+    ]
+  },
+  "superseded_rollouts": [],
+  "verdict": {
+    "best_play": "bar/24 8/2",
+    "best_equity": -0.747,
+    "best_se": 0.015,
+    "close": false,
+    "plays": [
+      {
+        "move": "bar/24 8/2",
+        "equity": -0.747,
+        "error": 0.0,
+        "se": 0.015,
+        "trials": 327,
+        "size": "level"
+      },
+      {
+        "move": "bar/24 7/1",
+        "equity": -0.821,
+        "error": -0.074,
+        "se": 0.016,
+        "trials": 327,
+        "size": "error"
+      },
+      {
+        "move": "bar/18",
+        "equity": -1.029,
+        "error": -0.282,
+        "se": 0.017,
+        "trials": 325,
+        "size": "huge blunder"
+      }
+    ],
+    "your_play": {
+      "move": "bar/18",
+      "equity": -1.029,
+      "error": -0.282,
+      "size": "huge blunder",
+      "is_best": false
+    }
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "feature": "shots at the bar-point blot and X's board strength (cost of being hit)",
+      "claim": "bar/18 leaves a blot on X's bar point that X hits with any 6 from the midpoint or any 1 from the 8-point, 20 rolls of 36. X's four-point board plus the 8-point means a hit checker is attacked and often closed out, so O's gammon losses rise and the race deficit no longer matters. The outfield control the blot exerts is worth less than that. From the ace point the checker is practically safe, because X hitting loose there against O's five-point board is far too risky for X.",
+      "predictions": [
+        {
+          "variant": "X board weak (4-point pair moved out to the 10-point)",
+          "direction": "bar/18 gains on bar/24 8/2",
+          "size": "gap narrows by 0.05 or more"
+        },
+        {
+          "variant": "X board strong (8-point pair makes the 5-point)",
+          "direction": "bar/18 loses more ground",
+          "size": "gap widens by 0.05 or more"
+        },
+        {
+          "variant": "X midpoint half unstacked (blots on X's 9 and 10)",
+          "direction": "bar/18 gains: there is something to attack from the bar point",
+          "size": "gap narrows by 0.05 or more, possibly flips"
+        },
+        {
+          "variant": "O midpoint pair moved to O's 10-point",
+          "direction": "none",
+          "size": "control, inside 0.05"
+        }
+      ],
+      "status": "held in its main prediction (X board weak: gap 0.30 -> 0.13 at 2-ply; 0.15 -> 0.09 with O owning the cube). The strong-board and outfield-target variants saturated at -1.000 with a centred cube because X would double O out; re-run with O owning a 2-cube (no cash possible) they read: targets on X's 11 and 10 move the gap 0.045, inside the band, so the outfield-control idea does not pay even in its best case; a higher X board (3-4-5-6) moves it 0.026, no effect. The 'control' (O's midpoint pair to O's 10-point) moved the gap 0.16 and is not a control: O's midpoint matters to the size of bar/18's error. Revised to H2."
+    },
+    {
+      "id": "H2",
+      "feature": "a direct shot against a strong board when the race is already lost",
+      "claim": "O trails by 18 pips with the checker still on the bar, so O's wins come from hitting a shot as X clears the midpoint and the 8-point, not from the race. bar/18 puts the one checker that can win the game in direct range of 20 of X's 36 rolls (any 6 from the midpoint, any 1 from the 8-point) against a four-point board, which nearly doubles O's gammon losses and throws away the shot-waiting plan. The ace point is safe because X hitting loose there against O's five-point board is a far worse gamble for X. The outfield control from the bar point is real but small: even with a weak X board and blots to attack, bar/18 stays an error of about a tenth of a point. Race efficiency is irrelevant at this deficit.",
+      "predictions": [
+        {
+          "variant": "X board weak",
+          "direction": "gap narrows",
+          "size": "0.05 or more; rollout should show bar/18 still clearly worse"
+        },
+        {
+          "variant": "X board weak AND blots on 11 and 10 (best case for the user's idea)",
+          "direction": "gap narrows further but does not close",
+          "size": "bar/18 still an error after rollout"
+        },
+        {
+          "variant": "O's midpoint pair to O's 10-point",
+          "direction": "gap narrows",
+          "size": "finding from the sweep, rollout to size it; not load-bearing for the account"
+        }
+      ],
+      "status": "held; confirmed by rollout (base gap 0.282 at 325 games; X board weak 0.129; weak board plus targets 0.113; O midpoint moved 0.177)"
+    }
+  ],
+  "variants": [
+    {
+      "label": "X board weak: 4-pt pair to the 10-pt",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 4,
+          "dst": 10
+        }
+      ],
+      "xgid": "XGID=a-BC--B-B-B-bD---bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 113,
+        "O": 119
+      },
+      "frame": "centred cube",
+      "what_moved": "X's 4-point pair becomes a 10-point: X board 2-3-6 plus 8 and 10; X 101 -> 113 pips. Shots at the bar point rise (3s added) but the hit costs less.",
+      "prediction": "H1/H2: gap narrows by 0.05 or more",
+      "observed_2ply": {
+        "bar/24 8/2": -0.261,
+        "bar/18": -0.386,
+        "gap": 0.125,
+        "gap_shift_vs_base": -0.177,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.261,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.261,
+            0.411,
+            0.048
+          ],
+          [
+            "bar/24 7/1",
+            -0.303,
+            0.399,
+            0.055
+          ],
+          [
+            "bar/18",
+            -0.386,
+            0.379,
+            0.065
+          ],
+          [
+            "bar/24 13/7",
+            -0.461,
+            0.356,
+            0.061
+          ]
+        ]
+      },
+      "holds": true,
+      "rollout": {
+        "level": "gnubg rollout 1296",
+        "settings": {
+          "trials": 1296,
+          "seed": 20261030,
+          "cubeful": true,
+          "variance_reduction": true,
+          "truncation": null,
+          "jsd_stop": true,
+          "jsd_limit": 2.33,
+          "chequer_plies": 0,
+          "cube_plies": 2,
+          "engine_version": "1.08.003"
+        },
+        "plays": [
+          {
+            "move": "bar/24 8/2",
+            "equity": -0.313,
+            "se": 0.012,
+            "trials": 327,
+            "error": 0.0,
+            "probs": [
+              0.412,
+              0.051,
+              0.002,
+              0.588,
+              0.044,
+              0.001
+            ]
+          },
+          {
+            "move": "bar/18",
+            "equity": -0.442,
+            "se": 0.012,
+            "trials": 324,
+            "error": -0.129,
+            "probs": [
+              0.382,
+              0.052,
+              0.002,
+              0.618,
+              0.065,
+              0.001
+            ]
+          }
+        ]
+      },
+      "confirmed": "bar/24 8/2 -0.313, bar/18 -0.442: gap 0.129 (base rollout 0.282); bar/18 still clearly worse"
+    },
+    {
+      "label": "X board strong: 8-pt pair makes the 5-pt",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 8,
+          "dst": 5
+        }
+      ],
+      "xgid": "XGID=a-BCBBB-----bD---bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 95,
+        "O": 119
+      },
+      "frame": "centred cube",
+      "what_moved": "X's 8-point pair makes the 5-point: X board 2-3-4-5-6, no 8-point (1s no longer hit); X 101 -> 95. Both plays read -1.000: X doubles O out.",
+      "prediction": "H1: gap widens",
+      "observed_2ply": {
+        "bar/24 8/2": -1.0,
+        "bar/18": -1.0,
+        "gap": 0.0,
+        "gap_shift_vs_base": -0.302,
+        "best_play": "bar/24 8/2",
+        "best_equity": -1.0,
+        "top": [
+          [
+            "bar/24 8/2",
+            -1.0,
+            0.19,
+            0.145
+          ],
+          [
+            "bar/24 7/1",
+            -1.0,
+            0.177,
+            0.163
+          ],
+          [
+            "bar/18",
+            -1.0,
+            0.18,
+            0.19
+          ],
+          [
+            "bar/24 13/7",
+            -1.0,
+            0.164,
+            0.246
+          ]
+        ]
+      },
+      "holds": null,
+      "note": "unreadable with a centred cube; see the O-owns-cube re-run",
+      "degenerate": true
+    },
+    {
+      "label": "X midpoint half unstacked: blots on 9 and 10",
+      "operations": [
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 9
+        },
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 10
+        }
+      ],
+      "xgid": "XGID=a-BCB-B-BAA-bB---bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 94,
+        "O": 119
+      },
+      "frame": "centred cube",
+      "what_moved": "Two X midpoint checkers to X's 9 and 10; X 101 -> 94. Both plays read -1.000.",
+      "prediction": "H1: bar/18 gains, possibly flips",
+      "observed_2ply": {
+        "bar/24 8/2": -0.978,
+        "bar/18": -1.0,
+        "gap": 0.022,
+        "gap_shift_vs_base": -0.28,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.978,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.978,
+            0.245,
+            0.091
+          ],
+          [
+            "bar/24 7/1",
+            -1.0,
+            0.234,
+            0.106
+          ],
+          [
+            "bar/24 13/7",
+            -1.0,
+            0.222,
+            0.143
+          ],
+          [
+            "bar/18",
+            -1.0,
+            0.202,
+            0.132
+          ]
+        ]
+      },
+      "holds": null,
+      "note": "unreadable with a centred cube; re-run with blots on 11 and 10 and O owning the cube",
+      "degenerate": true
+    },
+    {
+      "label": "control: O midpoint pair to O's 10-pt",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": -1,
+          "src": 13,
+          "dst": 10
+        }
+      ],
+      "xgid": "XGID=a-BCB-B-B----D-b-bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 101,
+        "O": 113
+      },
+      "frame": "centred cube",
+      "what_moved": "O's midpoint pair to O's 10-point (X's 15); O 119 -> 113; O's board unchanged. Best play becomes bar/24 10/4 (covering the 4-point).",
+      "prediction": "control: no effect",
+      "observed_2ply": {
+        "bar/24 8/2": -0.598,
+        "bar/18": -0.741,
+        "gap": 0.143,
+        "gap_shift_vs_base": -0.159,
+        "best_play": "bar/24 10/4",
+        "best_equity": -0.543,
+        "top": [
+          [
+            "bar/24 10/4",
+            -0.543,
+            0.318,
+            0.026
+          ],
+          [
+            "bar/24 8/2",
+            -0.598,
+            0.307,
+            0.052
+          ],
+          [
+            "bar/24 7/1",
+            -0.663,
+            0.295,
+            0.058
+          ],
+          [
+            "bar/18",
+            -0.741,
+            0.284,
+            0.066
+          ]
+        ]
+      },
+      "holds": false,
+      "note": "failed as a control: gap 0.30 -> 0.14. O's midpoint matters to the size of bar/18's error.",
+      "rollout": {
+        "level": "gnubg rollout 1296",
+        "settings": {
+          "trials": 1296,
+          "seed": 20261030,
+          "cubeful": true,
+          "variance_reduction": true,
+          "truncation": null,
+          "jsd_stop": true,
+          "jsd_limit": 2.33,
+          "chequer_plies": 0,
+          "cube_plies": 2,
+          "engine_version": "1.08.003"
+        },
+        "plays": [
+          {
+            "move": "bar/24 8/2",
+            "equity": -0.667,
+            "se": 0.012,
+            "trials": 327,
+            "error": 0.0,
+            "probs": [
+              0.307,
+              0.033,
+              0.001,
+              0.693,
+              0.045,
+              0.001
+            ]
+          },
+          {
+            "move": "bar/18",
+            "equity": -0.844,
+            "se": 0.014,
+            "trials": 325,
+            "error": -0.177,
+            "probs": [
+              0.273,
+              0.022,
+              0.001,
+              0.727,
+              0.061,
+              0.0
+            ]
+          }
+        ]
+      },
+      "confirmed": "bar/24 8/2 -0.667, bar/18 -0.844: gap 0.177 (base 0.282); O's midpoint changes the size of the error but not the verdict; not used in the account"
+    },
+    {
+      "label": "X blots on 11 and 10 (two midpoint checkers down)",
+      "operations": [
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 11
+        },
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 10
+        }
+      ],
+      "xgid": "XGID=a-BCB-B-B-AAbB---bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 96,
+        "O": 119
+      },
+      "frame": "centred cube",
+      "what_moved": "Two X midpoint checkers to X's 11 and 10, in direct range of a checker on X's bar point; X 101 -> 96. Both plays read -1.000.",
+      "prediction": "user's idea: bar/18 gains",
+      "observed_2ply": {
+        "bar/24 8/2": -1.0,
+        "bar/18": -1.0,
+        "gap": 0.0,
+        "gap_shift_vs_base": -0.302,
+        "best_play": "bar/24 8/2",
+        "best_equity": -1.0,
+        "top": [
+          [
+            "bar/24 8/2",
+            -1.0,
+            0.242,
+            0.096
+          ],
+          [
+            "bar/24 7/1",
+            -1.0,
+            0.232,
+            0.113
+          ],
+          [
+            "bar/24 13/7",
+            -1.0,
+            0.222,
+            0.138
+          ],
+          [
+            "bar/18",
+            -1.0,
+            0.218,
+            0.154
+          ]
+        ]
+      },
+      "holds": null,
+      "note": "unreadable with a centred cube; see the O-owns-cube re-run",
+      "degenerate": true
+    },
+    {
+      "label": "X board higher: 2-pt pair becomes the 5-pt",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 2,
+          "dst": 5
+        }
+      ],
+      "xgid": "XGID=a--CBBB-B---bD---bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 107,
+        "O": 119
+      },
+      "frame": "centred cube",
+      "what_moved": "X's 2-point pair becomes the 5-point: board 3-4-5-6 plus 8; X 101 -> 107. bar/18 reads -1.000.",
+      "prediction": "H1: gap widens",
+      "observed_2ply": {
+        "bar/24 8/2": -0.941,
+        "bar/18": -1.0,
+        "gap": 0.059,
+        "gap_shift_vs_base": -0.243,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.941,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.941,
+            0.251,
+            0.095
+          ],
+          [
+            "bar/24 7/1",
+            -1.0,
+            0.239,
+            0.113
+          ],
+          [
+            "bar/18",
+            -1.0,
+            0.23,
+            0.137
+          ],
+          [
+            "bar/24 13/7",
+            -1.0,
+            0.221,
+            0.137
+          ]
+        ]
+      },
+      "holds": null,
+      "note": "unreadable with a centred cube; see the O-owns-cube re-run",
+      "degenerate": true
+    },
+    {
+      "label": "X board weak AND blots on 11,10",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 4,
+          "dst": 9
+        },
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 11
+        },
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 10
+        }
+      ],
+      "xgid": "XGID=a-BC--B-BBAAbB---bbcbab---:0:0:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 106,
+        "O": 119
+      },
+      "frame": "centred cube",
+      "what_moved": "X's 4-point pair to the 9-point and two midpoint checkers to 11 and 10: weak board and targets; X 101 -> 106.",
+      "prediction": "H2: bar/18 gains but stays an error",
+      "observed_2ply": {
+        "bar/24 8/2": -0.534,
+        "bar/18": -0.639,
+        "gap": 0.105,
+        "gap_shift_vs_base": -0.197,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.534,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.534,
+            0.334,
+            0.071
+          ],
+          [
+            "bar/24 7/1",
+            -0.593,
+            0.319,
+            0.079
+          ],
+          [
+            "bar/18",
+            -0.639,
+            0.307,
+            0.071
+          ],
+          [
+            "bar/24 13/7",
+            -0.677,
+            0.299,
+            0.081
+          ]
+        ]
+      },
+      "holds": true,
+      "rollout": {
+        "level": "gnubg rollout 1296",
+        "settings": {
+          "trials": 1296,
+          "seed": 20261030,
+          "cubeful": true,
+          "variance_reduction": true,
+          "truncation": null,
+          "jsd_stop": true,
+          "jsd_limit": 2.33,
+          "chequer_plies": 0,
+          "cube_plies": 2,
+          "engine_version": "1.08.003"
+        },
+        "plays": [
+          {
+            "move": "bar/24 8/2",
+            "equity": -0.558,
+            "se": 0.012,
+            "trials": 327,
+            "error": 0.0,
+            "probs": [
+              0.342,
+              0.044,
+              0.001,
+              0.658,
+              0.066,
+              0.003
+            ]
+          },
+          {
+            "move": "bar/18",
+            "equity": -0.671,
+            "se": 0.012,
+            "trials": 326,
+            "error": -0.113,
+            "probs": [
+              0.31,
+              0.033,
+              0.001,
+              0.69,
+              0.07,
+              0.001
+            ]
+          }
+        ]
+      },
+      "confirmed": "bar/24 8/2 -0.558, bar/18 -0.671: gap 0.113; the user's idea in its best case is still an error of about a tenth"
+    },
+    {
+      "label": "base, O owns 2-cube",
+      "operations": [
+        {
+          "op": "cube",
+          "owner": -1,
+          "value": 2
+        }
+      ],
+      "xgid": "XGID=a-BCB-B-B---bD---bbcbab---:1:-1:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 101,
+        "O": 119
+      },
+      "frame": "O owns 2-cube",
+      "what_moved": "Same position with O owning a 2-cube: X cannot double, so no equity is pinned at -1.",
+      "prediction": "frame of reference for the cube-owned re-runs",
+      "observed_2ply": {
+        "bar/24 8/2": -0.333,
+        "bar/18": -0.48,
+        "gap": 0.147,
+        "gap_shift_vs_base": 0.0,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.333,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.333,
+            0.301,
+            0.074
+          ],
+          [
+            "bar/24 7/1",
+            -0.38,
+            0.285,
+            0.084
+          ],
+          [
+            "bar/24 13/7",
+            -0.468,
+            0.267,
+            0.131
+          ],
+          [
+            "bar/18",
+            -0.48,
+            0.256,
+            0.11
+          ]
+        ]
+      },
+      "holds": null
+    },
+    {
+      "label": "X board weak (4-pt pair to 10), O owns 2-cube",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 4,
+          "dst": 10
+        },
+        {
+          "op": "cube",
+          "owner": -1,
+          "value": 2
+        }
+      ],
+      "xgid": "XGID=a-BC--B-B-B-bD---bbcbab---:1:-1:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 113,
+        "O": 119
+      },
+      "frame": "O owns 2-cube",
+      "what_moved": "As 'X board weak', O owning a 2-cube.",
+      "prediction": "H1/H2: gap narrows by 0.05 or more",
+      "observed_2ply": {
+        "bar/24 8/2": -0.031,
+        "bar/18": -0.123,
+        "gap": 0.092,
+        "gap_shift_vs_base": -0.055,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.031,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.031,
+            0.411,
+            0.047
+          ],
+          [
+            "bar/24 7/1",
+            -0.066,
+            0.399,
+            0.054
+          ],
+          [
+            "bar/18",
+            -0.123,
+            0.379,
+            0.064
+          ],
+          [
+            "bar/24 13/7",
+            -0.18,
+            0.356,
+            0.064
+          ]
+        ]
+      },
+      "holds": true
+    },
+    {
+      "label": "X board strong (8-pt pair makes 5-pt), O owns 2-cube",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 8,
+          "dst": 5
+        },
+        {
+          "op": "cube",
+          "owner": -1,
+          "value": 2
+        }
+      ],
+      "xgid": "XGID=a-BCBBB-----bD---bbcbab---:1:-1:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 95,
+        "O": 119
+      },
+      "frame": "O owns 2-cube",
+      "what_moved": "As 'X board strong', O owning a 2-cube. The gap narrows instead (0.147 -> 0.063): the variant also removes X's 8-point, so 1s no longer hit and X loses a landing spot for the midpoint checkers. Confounded; not used in the account.",
+      "prediction": "H1: gap widens",
+      "observed_2ply": {
+        "bar/24 8/2": -0.685,
+        "bar/18": -0.748,
+        "gap": 0.063,
+        "gap_shift_vs_base": -0.084,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.685,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.685,
+            0.204,
+            0.199
+          ],
+          [
+            "bar/24 7/1",
+            -0.744,
+            0.189,
+            0.22
+          ],
+          [
+            "bar/18",
+            -0.748,
+            0.181,
+            0.191
+          ],
+          [
+            "bar/24 13/7",
+            -0.84,
+            0.181,
+            0.291
+          ]
+        ]
+      },
+      "holds": false
+    },
+    {
+      "label": "X blots on 11 and 10, O owns 2-cube",
+      "operations": [
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 11
+        },
+        {
+          "op": "move",
+          "player": 1,
+          "src": 13,
+          "dst": 10
+        },
+        {
+          "op": "cube",
+          "owner": -1,
+          "value": 2
+        }
+      ],
+      "xgid": "XGID=a-BCB-B-B-AAbB---bbcbab---:1:-1:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 96,
+        "O": 119
+      },
+      "frame": "O owns 2-cube",
+      "what_moved": "Targets in direct range of the bar point; O owning a 2-cube. Shift 0.045: inside the band.",
+      "prediction": "user's idea: bar/18 gains by 0.05 or more",
+      "observed_2ply": {
+        "bar/24 8/2": -0.507,
+        "bar/18": -0.609,
+        "gap": 0.102,
+        "gap_shift_vs_base": -0.045,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.507,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.507,
+            0.243,
+            0.104
+          ],
+          [
+            "bar/24 7/1",
+            -0.541,
+            0.234,
+            0.119
+          ],
+          [
+            "bar/24 13/7",
+            -0.591,
+            0.227,
+            0.152
+          ],
+          [
+            "bar/18",
+            -0.609,
+            0.225,
+            0.168
+          ]
+        ]
+      },
+      "holds": false
+    },
+    {
+      "label": "X board higher (2-pt pair to 5-pt), O owns 2-cube",
+      "operations": [
+        {
+          "op": "move_point",
+          "player": 1,
+          "src": 2,
+          "dst": 5
+        },
+        {
+          "op": "cube",
+          "owner": -1,
+          "value": 2
+        }
+      ],
+      "xgid": "XGID=a--CBBB-B---bD---bbcbab---:1:-1:-1:61:0:0:3:0:10",
+      "pips": {
+        "X": 107,
+        "O": 119
+      },
+      "frame": "O owns 2-cube",
+      "what_moved": "Board 3-4-5-6 plus 8; O owning a 2-cube. Shift 0.026: no effect.",
+      "prediction": "H1: gap widens",
+      "observed_2ply": {
+        "bar/24 8/2": -0.454,
+        "bar/18": -0.575,
+        "gap": 0.121,
+        "gap_shift_vs_base": -0.026,
+        "best_play": "bar/24 8/2",
+        "best_equity": -0.454,
+        "top": [
+          [
+            "bar/24 8/2",
+            -0.454,
+            0.262,
+            0.114
+          ],
+          [
+            "bar/24 7/1",
+            -0.505,
+            0.247,
+            0.127
+          ],
+          [
+            "bar/18",
+            -0.575,
+            0.23,
+            0.139
+          ],
+          [
+            "bar/24 13/7",
+            -0.577,
+            0.228,
+            0.15
+          ]
+        ]
+      },
+      "holds": false
+    }
+  ],
+  "account": "This position is about one checker and twenty numbers. You are eighteen pips behind with a man on the bar, so the race is gone; your wins come from a shot later, when X has to bring four checkers off the midpoint and two off the 8-point past whatever you keep back. The checker that wins that game is the one entering now. bar/18 parks it on X's bar point, where any 6 from the midpoint and any 1 from the 8-point hits it, more than half of X's rolls, against a four-point board. Hit there, you are dancing against four points while X comes home freely, and your gammon losses nearly double, from about one game in sixteen to one in nine. bar/18 is a huge blunder, costing more than a quarter of a point. Against a four-point board a blot that gets hit more than half the time is not an outpost; it is a gift.\n\nThe best play is bar/24 8/2. The ace point is safe: X cannot hit loose there without exposing a checker to your five-point board, a gamble X will not take while cruising to a race win. From there the checker covers X's 5-point and bar point directly and the outfield beyond them indirectly, which is where X's midpoint checkers have to land. The 6 then has to go somewhere, and 8/2 is the least damaging place. It keeps the 7-point, whose spare covers the 4-point with 3s and the 2-point with 5s, and it starts the 2-point, which counts in a closeout. bar/24 7/1 is an error, costing about a twelfth of a point: it gives up those builders for an ace point that barely matters when you finally hit. bar/24 13/7 fails for a different reason: it breaks your midpoint and leaves a blot that X's own midpoint checkers hit with 1s.\n\nYour reasoning had the right picture of X's plan and the wrong price for interfering with it. Controlling the outfield from the bar point is real, but small, and it costs the whole game when X rolls first. We checked your idea in its best case, with X's board weakened to three points and two midpoint checkers already down as targets in front of your checker: bar/18 is still an error there, about a tenth of a point. Only the weak board moves the number much; the targets hardly do. The race argument does not apply at all. Eighteen pips down, no play with a 6-1 makes you a racing favourite, and the checker you were hurrying is the one that has to stay back. When you are far behind in the race with one checker back, that checker's job is to be safe and patient, and the rest of your army's job is to keep a board for the day the shot comes. The bar point would be the place to be if X's board were two points and X had nowhere to land; then the exchange of hits favours you. It is not the place to be against four points and an 8-point.\n"
+}
