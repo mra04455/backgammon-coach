@@ -231,6 +231,9 @@ class GnubgEngine:
     rollout_settings: RolloutSettings = RolloutSettings()
     rollout_timeout: float = 4 * 3600.0
     analysis_plies: int = 2
+    # ``hint`` prints ten moves unless told otherwise; a double can have far
+    # more legal plays, and the user's play must be in the list.
+    hint_moves: int = 200
 
     def __init__(
         self,
@@ -289,7 +292,7 @@ class GnubgEngine:
             *self._eval_settings("evaluation", plies),
             "new match 0",
             f"set xgid {position.xgid()}",
-            "hint",
+            f"hint {self.hint_moves}",
         ]
         if position.dice is None:
             # For cube positions also ask for the plain position evaluation,

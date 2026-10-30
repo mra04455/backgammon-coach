@@ -84,7 +84,7 @@ def test_build_commands_uses_positive_accept_counts():
     assert "set evaluation movefilter 2 0 6 2 0.1" in cmds
     assert "set evaluation movefilter 2 1 -1 0 0" in cmds
     assert "set xgid XGID=-b----E-C---eE---c-e----B-:0:0:1:31:0:0:0:0:10" in cmds
-    assert cmds.strip().endswith("hint")
+    assert cmds.strip().endswith("hint 200")  # all legal moves, not the default ten
     # Never emit an accept count of 0: the CLI treats it as "skip this ply".
     for line in cmds.splitlines():
         if line.startswith("set evaluation movefilter"):

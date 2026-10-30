@@ -165,7 +165,7 @@ def test_evaluation_commands_unchanged_shape():
     eng = _engine_without_binary()
     cmds = eng.build_commands(parse_xgid(OPENING_31), plies=2)
     assert "set evaluation movefilter 2 0 6 2 0.1" in cmds
-    assert cmds.strip().endswith("hint")
+    assert cmds.strip().endswith("hint 200")  # all legal moves, not the default ten
 
 
 @pytest.mark.skipif(find_gnubg() is None, reason="gnubg not installed")
@@ -269,3 +269,12 @@ def test_live_rollouts_with_opponent_owning_the_cube():
     assert st.static.ply == "rollout" and st.static.trials == 36 and st.static.se is not None
     assert st.rollout is not None and st.rollout.engine_version is not None
     assert st.static.cubeful_equity < st.static.cubeless_equity
+
+
+@pytest.mark.skipif(find_gnubg() is None, reason="gnubg not installed")
+def test_live_hint_lists_every_legal_play_of_a_double():
+    eng = GnubgEngine()
+    ev = eng.evaluate(parse_xgid("XGID=bBABBBB-A-A-bB---bbcb-b---:1:-1:1:11:5:14:3:0:10"), plies=2)
+    moves = [m.move for m in ev.moves]
+    assert len(moves) > 10
+    assert "10/6" in moves  # rank 13 at 2-ply: outside the default ten-move listing
