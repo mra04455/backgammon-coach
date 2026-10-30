@@ -2841,15 +2841,15 @@
     {
       "id": "H1",
       "feature": "the slotted 2-point as a direct hit for an entering checker, against O's five-point board",
-      "claim": "With two O checkers on the bar the question is which point to leave open. 10/6 leaves the 2-point open with a blot on it, so any 2 enters and hits: X then faces a five-point board as strong as X's own, loses the tempo, and the closeout (and with it most of the gammons) slips away. The plays that cover the 2-point and open the 5-point instead leave nothing to hit, and a checker entering on the 5-point lands under X's builders on the 6, 8 and 10. Pip economy is irrelevant: X leads the race by 56 pips and the game is about the gammon.",
+      "claim": "With two O checkers on the bar the question is which point to leave open. 10/6 leaves the 2-point open with a blot on it, so any 2 enters and hits: X then loses the tempo (O's home board is three points, 3-5-6, with the 7- and 8-points blocking in front; this hypothesis misdescribed it as five points), and the closeout (and with it most of the gammons) slips away. The plays that cover the 2-point and open the 5-point instead leave nothing to hit, and a checker entering on the 5-point lands under X's builders on the 6, 8 and 10. Pip economy is irrelevant: X leads the race by 56 pips and the game is about the gammon.",
       "predictions": [
         {
-          "variant": "O board weak (7- and 8-points sent back to the midpoint)",
+          "variant": "O's 7- and 8-points sent back to the midpoint (written as 'O board weak'; home board unchanged)",
           "direction": "10/6 gains on 5/2 5/4",
           "size": "gap narrows by 0.05 or more"
         },
         {
-          "variant": "O board closed (midpoint pair makes O's 4-point)",
+          "variant": "O makes the 4-point: six-point prime 3-8 (written as 'O board closed')",
           "direction": "10/6 loses more ground",
           "size": "gap widens by 0.05 or more"
         },
@@ -2864,15 +2864,15 @@
     {
       "id": "H2",
       "feature": "the slotted 2-point as a direct hit; the hit costs pips and a foothold, not entry",
-      "claim": "Every entering 2 hits the blot on the 2-point. The hit costs X whole games, about one in twenty-five, while gammons stay at seven in ten whichever play is made: when no hit comes the closeout follows either way. What the hit costs is the 23 pips and the foothold O's checker gains in X's board, not the dance against O's board: cutting O's board to three points leaves the cost of 10/6 unchanged, while a closed O board (no entry at all) multiplies it. Pip economy is irrelevant at a 56-pip lead.",
+      "claim": "Every entering 2 hits the blot on the 2-point. The hit costs X whole games, about one in twenty-five, while gammons stay at seven in ten whichever play is made: when no hit comes the closeout follows either way. What the hit costs is the 23 pips and the foothold O's checker gains in X's board, not the trouble of re-entering: X's board is five points to O's three, and removing O's 7- and 8-point block leaves the cost of 10/6 unchanged, while a full six-point prime 3-8 (hit checker trapped) multiplies it. Pip economy is irrelevant at a 56-pip lead.",
       "predictions": [
         {
-          "variant": "O board weak",
+          "variant": "O's 7- and 8-points removed",
           "direction": "none",
           "size": "gap unchanged (observed in rollout)"
         },
         {
-          "variant": "O board closed",
+          "variant": "O's block becomes a six-point prime 3-8",
           "direction": "10/6 much worse",
           "size": "gap several times larger (observed in rollout)"
         },
@@ -2882,12 +2882,12 @@
           "size": "inside 0.05 at 2-ply"
         }
       ],
-      "status": "held; confirmed by rollout (base gap 0.103; weak O board 0.096; closed O board 0.489). Formed after the weak-board rollout contradicted H1, so its first prediction is a post-hoc fit and its second was H1's."
+      "status": "held; confirmed by rollout (base gap 0.103; weak O board 0.096; closed O board 0.489). Formed after the weak-board rollout contradicted H1, so its first prediction is a post-hoc fit and its second was H1's. Corrected after review: O's home board is three points (3-5-6), not five; the variants changed O's blocking points, not its home board."
     }
   ],
   "variants": [
     {
-      "label": "O board weak: 7- and 8-pt pairs back to the midpoint",
+      "label": "O's 7- and 8-points sent back to the midpoint (block removed; home board 3-5-6 unchanged)",
       "operations": [
         {
           "op": "move_point",
@@ -2907,8 +2907,8 @@
         "X": 84,
         "O": 162
       },
-      "what_moved": "O's 7- and 8-point pairs return to O's midpoint (6 there): O's board is 3-5-6, three points; O 140 -> 162 pips. X's gammon chances rise for every play.",
-      "prediction": "H1: gap narrows by 0.05 or more",
+      "what_moved": "O's 7- and 8-point pairs return to O's midpoint (6 there). O's home board stays 3-5-6 (three points); the four-point block 5-8 becomes 5-6. O 140 -> 162 pips.",
+      "prediction": "H1 (as first written: 'O board weak'): gap narrows by 0.05 or more. Mislabelled when designed: this removes O's blocking points, not home-board points.",
       "observed_2ply": {
         "5/2 5/4": 1.7,
         "10/6": 1.622,
@@ -2994,7 +2994,7 @@
       "confirmed": "contradicted: rollout gap 0.096 against a base rollout gap of 0.103 (joint SE about 0.016 each), so weakening O's board does not reduce the cost of 10/6. The 2-ply narrowing (0.162 -> 0.078) did not survive."
     },
     {
-      "label": "O board closed: midpoint pair makes O's 4-pt",
+      "label": "O makes the 4-point: six-point prime 3-8, home board 3-4-5-6",
       "operations": [
         {
           "op": "move_point",
@@ -3008,7 +3008,7 @@
         "X": 84,
         "O": 122
       },
-      "what_moved": "O's midpoint pair makes O's 4-point: O's board 3-4-5-6-7-8 is closed; O 140 -> 122. A hit X checker cannot enter until O breaks.",
+      "what_moved": "O's midpoint pair makes O's 4-point. O's home board becomes 3-4-5-6 (four points, 1 and 2 open) and the block 3-8 is a full six-point prime; a hit X checker that enters is trapped behind it. O 140 -> 122. Mislabelled 'closed board' when designed.",
       "prediction": "H1: gap widens by 0.05 or more",
       "observed_2ply": {
         "5/2 5/4": 1.144,
@@ -3148,5 +3148,5 @@
       "holds": true
     }
   ],
-  "account": "This position is about the blot on your 2-point. O has two checkers on the bar and you hold five points, so the only question the 1-1 has to answer is which point O gets to enter on, and whether there is anything to hit when O does. 10/6 leaves the 2-point open with your blot still on it, so every 2 enters and hits, eleven rolls of thirty-six. Being hit there does not cost you gammons, which stay at about seven games in ten whatever you play, because when the hit does not come you close O out either way. It costs you whole games: the hit checker loses twenty-three pips and O's checker gains a foothold in your board, and about one game in twenty-five that you would otherwise win turns into a loss. With O holding a 2-cube that is a blunder, costing about a tenth of a point.\n\nThe best play is 5/2 5/4: cover the 2-point and leave the 5-point open instead. Now O enters only with 5s, lands on an empty point with nothing to hit, and sits directly under your spares on the 6, 8 and 10-points. Opening the 4-point instead, with 8/7 4/2 4/3, is almost as good, a small error of a few hundredths. The lesson is in the shape of these plays rather than the choice between them: every good play here covers the slot. Which high point you open is a detail; a blot in your board with two men on the bar is not.\n\nYour reasoning rested on three premises and none of them carries the decision. Your board is not stronger than O's: both are five points. But the board comparison turns out to be beside the point. We cut O's board down to three points, so that your hit checker would enter almost at will, and 10/6 cost the same tenth of a point, because what the hit costs is the pips and the foothold, not the dance. Only a closed board changes the picture, and the other way: then 10/6 would cost about half a point. Pips are not the issue: you lead the race by fifty-six, and no play with a 1-1 changes whether you win the race, only whether you keep a checker out of trouble while you close the board. The third premise, that return shots make the hit cheap, is half right. You do have many return shots, but a return hit only puts you back where you started, with O's second checker meanwhile entering, and the games you lose are the ones where that exchange goes wrong. When your opponent has men on the bar and you have a loose checker in your board, cover it first and economise pips later. The rule would bend only if covering cost you a point you cannot spare, or if the entering checker could not hit, and neither is true here: three different covers were available and all of them beat the slot.\n"
+  "account": "This position is about the blot on your 2-point. O has two checkers on the bar and you hold five points, so the only question the 1-1 has to answer is which point O gets to enter on, and whether there is anything to hit when O does. 10/6 leaves the 2-point open with your blot still on it, so every 2 enters and hits, eleven rolls of thirty-six. Being hit there does not cost you gammons, which stay at about seven games in ten whatever you play, because when the hit does not come you close O out either way. It costs you whole games: the hit checker loses twenty-three pips and O's checker gains a foothold in your board, and about one game in twenty-five that you would otherwise win turns into a loss. With O holding a 2-cube that is a blunder, costing about a tenth of a point.\n\nThe best play is 5/2 5/4: cover the 2-point and leave the 5-point open instead. Now O enters only with 5s, lands on an empty point with nothing to hit, and sits directly under your checkers on the 8- and 10-points, which cover the 5-point with 3s and 5s. Opening the 4-point instead, with 8/7 4/2 4/3, is almost as good, a small error of a few hundredths. The lesson is in the shape of these plays rather than the choice between them: every good play here covers the slot. Which high point you open is a detail; a blot in your board with two men on the bar is not.\n\nYour reasoning rested on three premises, and the one that is true does not carry the decision. Your board is stronger than O's: five points against three, so a hit checker of yours enters three rolls in four. But that is not where the cost of the hit lies. We took away O's 7- and 8-points, the block in front of O's board, and 10/6 cost the same tenth of a point, because what the hit costs is the pips and the foothold, not the trouble getting back in. Only when O's block grows into a full six-point prime from the 3-point to the 8-point does the picture change, and the other way: then 10/6 would cost about half a point. Pips are not the issue: you lead the race by fifty-six, and no play with a 1-1 changes whether you win the race, only whether you keep a checker out of trouble while you close the board. The third premise, that return shots make the hit cheap, is half right. You do have many return shots, but a return hit only puts you back where you started, with O's second checker meanwhile entering, and the games you lose are the ones where that exchange goes wrong. When your opponent has men on the bar and you have a loose checker in your board, cover it first and economise pips later. The rule would bend only if covering cost you a point you cannot spare, or if the entering checker could not hit, and neither is true here: three different covers were available and all of them beat the slot.\n"
 }
