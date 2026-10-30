@@ -106,6 +106,19 @@ take", compare the take with a centred cube against the same position with the t
 changes the question, not a feature of the position. `mirror` swaps the sides (useful only to
 check that a verdict does not depend on which side is which).
 
+## Reading the result
+
+Do not read a variant's pips, points or shots off the board. `bgcoach facts VARIANT_XGID` gives
+them, and `--after PLAY` gives the shots and cover numbers after each candidate play in the
+variant. Record `what_moved` from that output.
+
+## Saturation
+
+When one side is already a double/pass, cubeful equities pin at exactly +1.000 or -1.000 and
+every play reads the same. If a variant does that, re-run it with the trailing side owning the
+cube (`{"op": "cube", "owner": <trailer>, "value": 2}`) so no cash is possible, compare plays in
+that frame, and say so in the record.
+
 ## Controls
 
 Every sweep needs one or two variants your explanation says will not matter: a race change

@@ -16,10 +16,14 @@ put detail in those.
   and `apply(pos, [op dicts])`.
 - `src/bgcoach/engines/` — `Engine` protocol + `gnubg.py` backend: `evaluate` (command file →
   `hint` → parsed) and `rollout` (two passes: rank at 2-ply, then `analyse rollout move`/`cube`).
+- `src/bgcoach/moves.py` — legal plays for a roll (checked against gnubg's move list), gnubg-notation
+  parse/format, and exact counts: shots at a blot, entering numbers, point-making numbers.
+- `src/bgcoach/facts.py` — the counts an account relies on (home board, blots, spares, primes, shots
+  after a play, cover numbers), so nothing is read off the diagram.
 - `src/bgcoach/analysis.py` — sweeps (base + variants, evaluated, deltas summarised).
 - `src/bgcoach/study.py` — a study: candidates at 2-ply, rollout verdict, `studies/<date>-<slug>/study.{json,md}`.
-- `src/bgcoach/mcp_server.py` — MCP tools: `show_position`, `perturb_position`, `evaluate`, `sweep`, `rollout`, `engines`.
-- `src/bgcoach/cli.py` — `bgcoach show|eval|sweep|rollout|study|write`; the last three emit JSON.
+- `src/bgcoach/mcp_server.py` — MCP tools: `show_position`, `facts`, `perturb_position`, `evaluate`, `sweep`, `rollout`, `engines`.
+- `src/bgcoach/cli.py` — `bgcoach show|facts|eval|sweep|rollout|study|write`; all but `show`/`eval` emit JSON.
   `study` rolls out the original (extending close decisions to 5184 trials); `write` records the
   analyst's hypotheses, variants and account and re-renders `study.md` from the JSON.
 - `.claude/skills/study/` — the analyst skill: `/study <XGID> [play] [reasoning]` runs the loop in
@@ -35,6 +39,8 @@ put detail in those.
 - Rollout results carry `se` (standard error of the cubeful equity) and `trials` (games actually
   played; fewer than requested when JSD stopping ended it). Evaluations leave both None.
 - Any number that reaches a written account comes from a rollout, never from a 2-ply evaluation.
+  Any count (points, blots, spares, shots, entering numbers) comes from `bgcoach facts`, never
+  from reading the diagram. Home board means a player's own points 1 to 6.
 - Positions move between functions as `Position` objects; as XGID strings at the MCP boundary.
 - Engine-specific parsing stays inside `engines/<name>.py`. Nothing above that layer may know
   what gnubg output looks like.

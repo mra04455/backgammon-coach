@@ -51,8 +51,9 @@ one-line note when done so the next session (or the chat side) can see where thi
 - [ ] Add ops that Step 2 showed were missing. Likely candidates: `slot` (place a blot from a
       stack), `break_point`, `advance_anchor`, `race_adjust` (shift N pips without changing
       structure), `swap_races` (give the other side the lead).
-- [ ] Add a "legal move" generator (`moves.py`) so the analyst can also ask "what are the legal
-      plays here" and compare the engine's list to its own.
+- [x] Legal move generator (`moves.py`), checked against gnubg's full move list on four positions,
+      plus exact shot, entering and point-making counts, and `bgcoach facts` / the MCP `facts` tool
+      (2026-10-30, after two published accounts misread the diagram).
 
 ## Step 5 — Rollouts
 

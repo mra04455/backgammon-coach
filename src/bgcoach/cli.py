@@ -6,8 +6,9 @@
     bgcoach rollout XGID [--move M ...] [--top N] [--trials N] [--truncate P] [--seed S]
     bgcoach study   XGID [--play M] [--reasoning TEXT] [--trials N] [--out DIR]
     bgcoach write   STUDY_DIR [--account FILE] [--hypotheses JSON] [--variants JSON]
+    bgcoach facts   XGID [--after PLAY ...]
 
-``rollout``, ``study`` and ``write`` print JSON; ``study`` writes
+``rollout``, ``study``, ``write`` and ``facts`` print JSON; ``study`` writes
 ``studies/<date>-<slug>/study.{json,md}`` and ``write`` records the
 analyst's hypotheses, variants and account in it, re-rendering the markdown.
 """
@@ -19,7 +20,7 @@ import json
 import sys
 from pathlib import Path
 
-from bgcoach import analysis, perturb
+from bgcoach import analysis, facts, perturb
 from bgcoach.engines import EngineError, get_engine
 from bgcoach.position import XGIDError, parse_xgid
 from bgcoach.study import EXTENDED_TRIALS, run_study, update_study
@@ -132,6 +133,19 @@ def main(argv: list[str] | None = None) -> int:
         "--variants", default=None, metavar="JSON", help="JSON list of variant objects, or @file"
     )
 
+    fa = sub.add_parser(
+        "facts", help="exact counts: points, blots, spares, primes, shots, entering (JSON)"
+    )
+    fa.add_argument("xgid")
+    fa.add_argument(
+        "--after",
+        action="append",
+        default=[],
+        metavar="PLAY",
+        help="also report the position after this play by the player on roll, with the "
+        "opponent's shots and the mover's covering numbers; repeatable",
+    )
+
     args = ap.parse_args(argv)
 
     if args.cmd == "write":
@@ -145,6 +159,20 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "show":
         print(pos.ascii())
+        return 0
+
+    if args.cmd == "facts":
+        out = {"position": facts.facts(pos)}
+        if args.after:
+            if pos.dice is None:
+                print("error: --after needs a position with dice", file=sys.stderr)
+                return 2
+            try:
+                out["plays"] = [facts.play_facts(pos, play) for play in args.after]
+            except ValueError as err:
+                print(f"error: {err}", file=sys.stderr)
+                return 2
+        print(json.dumps(out, indent=2))
         return 0
 
     try:

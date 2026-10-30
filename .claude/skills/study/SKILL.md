@@ -28,6 +28,7 @@ Prefer the `bg-engine` MCP tools when connected: `show_position`, `evaluate`, `p
 
 ```bash
 .venv/bin/bgcoach show   XGID
+.venv/bin/bgcoach facts  XGID --after "PLAY" --after "PLAY"   # exact counts; see "Counting"
 .venv/bin/bgcoach eval   XGID --json
 .venv/bin/bgcoach sweep  XGID --var "label=[ops json]" ...
 .venv/bin/bgcoach rollout XGID [--move M ...] [--truncate P]
@@ -37,6 +38,21 @@ Prefer the `bg-engine` MCP tools when connected: `show_position`, `evaluate`, `p
 
 Budget: a 2-ply evaluation is well under a second; a full rollout is about 100 s per candidate
 play (4 cores). Sweep at 2-ply. Roll out only what the account rests on.
+
+## Counting: never by eye
+
+Every count in an account comes from `facts` (MCP tool or `bgcoach facts`) or from a rollout.
+That includes: points made, the home board (own points 1 to 6 only; a point in front of it is a
+block or prime, not board strength), open points, blots, spares (a point needs three checkers to
+have a spare), the longest prime, anchors, checkers on the bar, pips and the race lead, shots at
+each blot after each candidate play (rolls of 36, from full legal-move generation, so combination
+shots and blocked intermediate points are handled), entering numbers, and the rolls that make a
+point or cover a blot next turn. Run `facts` on the base and with `--after` for every play the
+account discusses. If a sentence names a number or a count that is not in a `facts` output or a
+rollout, remove the sentence or get the number.
+
+The diagram is for orientation only. Two published accounts went wrong by reading it: one called
+a point with two checkers a spare, one counted an opponent's outfield block as home-board points.
 
 ## Procedure
 
@@ -54,8 +70,9 @@ extends the rollout if the decision is close, and writes `studies/<date>-<slug>/
 and `study.md`. Note the folder path from `saved_to`. Read the `verdict`: it is the thing you
 are explaining and nothing you write may contradict it.
 
-Show the user the board (`show_position` or the `ascii` field) and state the verdict in one
-line: best play, the user's play, the size of the error in words. No explanation yet.
+Run `facts` on the base and with `--after` for the rolled-out plays. Show the user the board
+(`show_position` or the `ascii` field) and state the verdict in one line: best play, the user's
+play, the size of the error in words. No explanation yet.
 
 ### 2. Explain in the expert vocabulary
 
@@ -120,7 +137,8 @@ cube variant roll out the position; for a variant with no cube decision you get 
 
 ### 6. Write and record
 
-Write the account following `style.md`, then store everything:
+Write the account following `style.md`. Before storing it, check every count in it against the
+`facts` outputs (a checklist is in `style.md`). Then store everything:
 
 ```bash
 .venv/bin/bgcoach write studies/<folder> --account account.md \

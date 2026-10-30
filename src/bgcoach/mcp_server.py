@@ -263,6 +263,35 @@ def rollout(
 
 
 @mcp.tool()
+def facts(xgid: str, after: list[str] | None = None) -> dict:
+    """Exact counts for an account, instead of reading the diagram by eye.
+
+    For both sides, in each side's own numbering: made points, home board
+    (own points 1-6 only; points in front are a block, not board strength),
+    open home points, blots, spares (checkers beyond two on a point), the
+    longest prime, anchors, bar, off, pips and entering numbers. ``after``
+    lists candidate plays by the player on roll; for each, the position
+    after it, the opponent's shots at every blot (rolls of 36, from full
+    legal-move generation, so combination and blocked shots are right),
+    the opponent's entering numbers, and the mover's rolls next turn that
+    make each open home point or cover each blot. Every number that
+    appears in a written account must come from here or from a rollout.
+    """
+    from bgcoach import facts as _facts
+
+    try:
+        p = parse_xgid(xgid)
+        out: dict[str, Any] = {"position": _facts.facts(p)}
+        if after:
+            if p.dice is None:
+                raise ValueError("'after' needs a position with dice")
+            out["plays"] = [_facts.play_facts(p, play) for play in after]
+    except (XGIDError, ValueError) as e:
+        return _err(e)
+    return out
+
+
+@mcp.tool()
 def engines() -> dict:
     """List available engine backends and whether each is usable right now."""
     from bgcoach.engines import REGISTRY

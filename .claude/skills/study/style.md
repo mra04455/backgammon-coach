@@ -76,6 +76,21 @@ These show the voice. The positions are generic; do not reuse the verdicts.
 > passing. The pass would be right without the anchor, or with your board down to two points;
 > then a hit would only start a long race you are losing.
 
+## Before the account leaves your hands
+
+Check each of these against the `facts` output for the position and for every play named:
+
+- Home board sizes for both sides (points 1 to 6 only), and whether a claimed "stronger board" is true.
+- Every "spare", "builder" and "cover" named: the point holds three or more checkers, or the
+  cover number appears in `my_next_turn`.
+- Every shot count and hit chance: the number in `opponent_threats.shots`, written as a rough
+  fraction of 36.
+- Every entering number, pip count and race lead.
+- Every point the account calls open, made, slotted or a prime.
+- Every equity and error size: from the rollout, in words.
+
+A claim that fails the check is removed or corrected; it is never softened into a hedge.
+
 ## Words for sizes
 
 Use these consistently (cubeful equity, money play):
