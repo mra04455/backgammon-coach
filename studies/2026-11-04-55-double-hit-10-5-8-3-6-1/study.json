@@ -1,0 +1,549 @@
+{
+  "schema": 1,
+  "bgcoach": "0.1.0",
+  "created": "2026-11-04T01:38:57+00:00",
+  "position": {
+    "xgid": "XGID=-a-a-AD-C-A-cD---cbe--A-A-:0:0:1:55:9:23:3:0:10",
+    "decision": "checker",
+    "on_roll": 1,
+    "pips": {
+      "bottom": 161,
+      "top": 153
+    },
+    "money_game": true,
+    "ascii": " +-13-14-15-16-17-18-+---+-19-20-21-22-23-24-+\n | X           O  O  |   | O        X     X  |\n | X           O  O  |   | O                 |\n | X           O     |   | O                 |\n | X                 |   | O                 |\n |                   |   | O                 |\n |                   |BAR|                   |\n |                   |   |                   |\n |                   |   | X                 |\n | O           X     |   | X                 |\n | O           X     |   | X                 |\n | O     X     X     |   | X  X     O     O  |\n +-12-11-10--9--8--7-+---+--6--5--4--3--2--1-+\n X (bottom) to play 55. Cube 1 (centered). money game, Jacoby, beavers.\n Pips: X 161, O 153. Off: X 0, O 0.\n XGID=-a-a-AD-C-A-cD---cbe--A-A-:0:0:1:55:9:23:3:0:10"
+  },
+  "your_play": "10/5 8/3*(2) 6/1*",
+  "your_reasoning": "I really have no idea why this was wrong. XG's play keeps the 8-point and doesn't leave a shot at the cost of hitting only once. Maybe the idea is to keep a priming game plan available? Or bring an extra builder into the zone, even though it's just a fourth checker on the six-point?",
+  "candidates": {
+    "xgid": "XGID=-a-a-AD-C-A-cD---cbe--A-A-:0:0:1:55:9:23:3:0:10",
+    "kind": "checker",
+    "engine": "gnubg",
+    "level": "gnubg 2-ply",
+    "moves": [
+      {
+        "rank": 1,
+        "move": "13/3* 10/5 8/3",
+        "equity": 0.619,
+        "error": 0.0,
+        "ply": "2-ply",
+        "probs": [
+          0.624,
+          0.248,
+          0.011,
+          0.376,
+          0.085,
+          0.003
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 2,
+        "move": "10/5 8/3*(2) 6/1*",
+        "equity": 0.518,
+        "error": -0.101,
+        "ply": "2-ply",
+        "probs": [
+          0.592,
+          0.282,
+          0.009,
+          0.408,
+          0.1,
+          0.005
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 3,
+        "move": "10/5 8/3* 6/1*(2)",
+        "equity": 0.387,
+        "error": -0.232,
+        "ply": "2-ply",
+        "probs": [
+          0.563,
+          0.255,
+          0.006,
+          0.437,
+          0.107,
+          0.005
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 4,
+        "move": "10/5 8/3*(3)",
+        "equity": 0.363,
+        "error": -0.256,
+        "ply": "2-ply",
+        "probs": [
+          0.572,
+          0.224,
+          0.009,
+          0.428,
+          0.101,
+          0.004
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 5,
+        "move": "8/3*(2) 6/1*(2)",
+        "equity": 0.357,
+        "error": -0.261,
+        "ply": "2-ply",
+        "probs": [
+          0.556,
+          0.274,
+          0.006,
+          0.444,
+          0.121,
+          0.007
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 6,
+        "move": "13/8 10/5 6/1*(2)",
+        "equity": 0.25,
+        "error": -0.369,
+        "ply": "2-ply",
+        "probs": [
+          0.552,
+          0.189,
+          0.005,
+          0.448,
+          0.106,
+          0.004
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 7,
+        "move": "13/3* 10/5 6/1*",
+        "equity": 0.17,
+        "error": -0.449,
+        "ply": "2-ply",
+        "probs": [
+          0.527,
+          0.195,
+          0.007,
+          0.473,
+          0.129,
+          0.007
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 8,
+        "move": "13/3* 13/8 10/5",
+        "equity": 0.167,
+        "error": -0.451,
+        "ply": "2-ply",
+        "probs": [
+          0.533,
+          0.184,
+          0.009,
+          0.467,
+          0.122,
+          0.006
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 9,
+        "move": "13/3* 8/3 6/1*",
+        "equity": 0.082,
+        "error": -0.537,
+        "ply": "0-ply",
+        "probs": [
+          0.512,
+          0.2,
+          0.008,
+          0.488,
+          0.145,
+          0.011
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 10,
+        "move": "13/8(2) 10/5 6/1*",
+        "equity": 0.053,
+        "error": -0.565,
+        "ply": "0-ply",
+        "probs": [
+          0.508,
+          0.154,
+          0.006,
+          0.492,
+          0.122,
+          0.005
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 11,
+        "move": "13/3*(2)",
+        "equity": 0.011,
+        "error": -0.607,
+        "ply": "0-ply",
+        "probs": [
+          0.498,
+          0.167,
+          0.01,
+          0.502,
+          0.148,
+          0.01
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 12,
+        "move": "13/3* 6/1*(2)",
+        "equity": -0.047,
+        "error": -0.666,
+        "ply": "0-ply",
+        "probs": [
+          0.481,
+          0.18,
+          0.005,
+          0.519,
+          0.162,
+          0.013
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 13,
+        "move": "13/8(3) 10/5",
+        "equity": -0.141,
+        "error": -0.76,
+        "ply": "0-ply",
+        "probs": [
+          0.456,
+          0.129,
+          0.006,
+          0.544,
+          0.141,
+          0.008
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 14,
+        "move": "8/3*(3) 6/1*",
+        "equity": -0.155,
+        "error": -0.774,
+        "ply": "0-ply",
+        "probs": [
+          0.454,
+          0.162,
+          0.005,
+          0.546,
+          0.176,
+          0.016
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 15,
+        "move": "13/3* 8/3(2)",
+        "equity": -0.222,
+        "error": -0.841,
+        "ply": "0-ply",
+        "probs": [
+          0.441,
+          0.147,
+          0.009,
+          0.559,
+          0.193,
+          0.019
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 16,
+        "move": "13/8(2) 6/1*(2)",
+        "equity": -0.229,
+        "error": -0.848,
+        "ply": "0-ply",
+        "probs": [
+          0.436,
+          0.131,
+          0.005,
+          0.564,
+          0.171,
+          0.012
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 17,
+        "move": "13/3* 13/8 6/1*",
+        "equity": -0.269,
+        "error": -0.887,
+        "ply": "0-ply",
+        "probs": [
+          0.435,
+          0.135,
+          0.006,
+          0.565,
+          0.204,
+          0.024
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 18,
+        "move": "13/3* 13/8(2)",
+        "equity": -0.508,
+        "error": -1.127,
+        "ply": "0-ply",
+        "probs": [
+          0.388,
+          0.11,
+          0.007,
+          0.612,
+          0.243,
+          0.037
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 19,
+        "move": "10/5 6/1*(3)",
+        "equity": -0.567,
+        "error": -1.185,
+        "ply": "0-ply",
+        "probs": [
+          0.36,
+          0.088,
+          0.002,
+          0.64,
+          0.202,
+          0.013
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 20,
+        "move": "13/8(4)",
+        "equity": -0.612,
+        "error": -1.231,
+        "ply": "0-ply",
+        "probs": [
+          0.359,
+          0.089,
+          0.004,
+          0.641,
+          0.219,
+          0.021
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 21,
+        "move": "13/8(3) 6/1*",
+        "equity": -0.631,
+        "error": -1.25,
+        "ply": "0-ply",
+        "probs": [
+          0.367,
+          0.097,
+          0.005,
+          0.633,
+          0.241,
+          0.035
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 22,
+        "move": "13/8 6/1*(3)",
+        "equity": -1.0,
+        "error": -1.619,
+        "ply": "0-ply",
+        "probs": [
+          0.301,
+          0.07,
+          0.002,
+          0.699,
+          0.288,
+          0.035
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 23,
+        "move": "8/3* 6/1*(3)",
+        "equity": -1.0,
+        "error": -1.619,
+        "ply": "0-ply",
+        "probs": [
+          0.297,
+          0.07,
+          0.001,
+          0.703,
+          0.293,
+          0.035
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      },
+      {
+        "rank": 24,
+        "move": "6/1*(4)",
+        "equity": -1.0,
+        "error": -1.619,
+        "ply": "0-ply",
+        "probs": [
+          0.26,
+          0.05,
+          0.001,
+          0.74,
+          0.277,
+          0.026
+        ],
+        "se": null,
+        "trials": null,
+        "cubeless_equity": null
+      }
+    ]
+  },
+  "rollout": {
+    "xgid": "XGID=-a-a-AD-C-A-cD---cbe--A-A-:0:0:1:55:9:23:3:0:10",
+    "kind": "checker",
+    "engine": "gnubg",
+    "level": "gnubg rollout 1296",
+    "rollout": {
+      "trials": 1296,
+      "seed": 20261104,
+      "cubeful": true,
+      "variance_reduction": true,
+      "truncation": null,
+      "jsd_stop": true,
+      "jsd_limit": 2.33,
+      "chequer_plies": 0,
+      "cube_plies": 2,
+      "engine_version": "1.08.003"
+    },
+    "moves": [
+      {
+        "rank": 1,
+        "move": "13/3* 10/5 8/3",
+        "equity": 0.611,
+        "error": 0.0,
+        "ply": "rollout",
+        "probs": [
+          0.627,
+          0.251,
+          0.011,
+          0.373,
+          0.087,
+          0.005
+        ],
+        "se": 0.025,
+        "trials": 327,
+        "cubeless_equity": 0.423
+      },
+      {
+        "rank": 2,
+        "move": "10/5 8/3*(2) 6/1*",
+        "equity": 0.494,
+        "error": -0.117,
+        "ply": "rollout",
+        "probs": [
+          0.591,
+          0.287,
+          0.008,
+          0.409,
+          0.103,
+          0.006
+        ],
+        "se": 0.025,
+        "trials": 324,
+        "cubeless_equity": 0.367
+      }
+    ]
+  },
+  "superseded_rollouts": [],
+  "verdict": {
+    "best_play": "13/3* 10/5 8/3",
+    "best_equity": 0.611,
+    "best_se": 0.025,
+    "close": false,
+    "plays": [
+      {
+        "move": "13/3* 10/5 8/3",
+        "equity": 0.611,
+        "error": 0.0,
+        "se": 0.025,
+        "trials": 327,
+        "size": "level"
+      },
+      {
+        "move": "10/5 8/3*(2) 6/1*",
+        "equity": 0.494,
+        "error": -0.117,
+        "se": 0.025,
+        "trials": 324,
+        "size": "blunder"
+      }
+    ],
+    "your_play": {
+      "move": "10/5 8/3*(2) 6/1*",
+      "equity": 0.494,
+      "error": -0.117,
+      "size": "blunder",
+      "is_best": false
+    }
+  },
+  "hypotheses": [],
+  "variants": [],
+  "account": null
+}
