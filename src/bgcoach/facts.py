@@ -84,7 +84,21 @@ def facts(pos: Position) -> dict[str, Any]:
         "O": o,
     }
     if pos.dice is not None:
-        d["legal_plays"] = len(mv.legal_plays(pos))
+        plays = mv.legal_plays(pos)
+        d["legal_plays"] = len(plays)
+        if plays:
+            # The race as it stands once this roll is played (the mover's
+            # pips after the play that uses the most pips).
+            mover = pos.turn
+            after = min(p.result.pip_count(mover) for p in plays)
+            other = pos.pip_count(-mover)
+            d["race"]["after_this_roll"] = {
+                "mover": "X" if mover == BOTTOM else "O",
+                "mover_pips": after,
+                "opponent_pips": other,
+                "mover_leads_by": other - after,
+                "note": "the opponent is then on roll",
+            }
     return d
 
 

@@ -130,3 +130,14 @@ def test_live_generator_matches_gnubg_move_list(xgid):
     ours = {(p.result.board, p.result.bar) for p in legal_plays(pos)}
     assert ours == theirs
     assert format_play(legal_plays(pos)[0].steps)  # notation never blank
+
+
+def test_facts_reports_the_race_after_the_roll():
+    f = facts.facts(parse_xgid("XGID=-a-a-AD-C-A-cD---cbe--A-A-:0:0:1:55:9:23:3:0:10"))
+    r = f["race"]
+    assert r["X_leads_by"] == -8  # before the roll
+    assert r["after_this_roll"]["mover"] == "X"
+    assert (
+        r["after_this_roll"]["mover_pips"] == 141 and r["after_this_roll"]["mover_leads_by"] == 12
+    )
+    assert "after_this_roll" not in facts.facts(parse_xgid(OPENING_31).with_(dice=None))["race"]

@@ -5,6 +5,20 @@ variants were quality control, like an editor's fact-check, and they do not appe
 history, abandoned hypotheses and the sweep never appear either. The engine record is appended
 automatically in a collapsed section, so the account itself needs no numbers table.
 
+## Two rules that outrank the rest
+
+1. **Never narrate the checking.** No sentence describes an edit to the position or a test you
+   ran: not "give yourself a fourth checker", not "take away O's block", not "we checked". The
+   variants are quality control and live in the JSON. In the account a counterfactual appears at
+   most once or twice, stated as a condition in backgammon terms: "if your 8-point were already
+   safe, the second hit would be right." The reader should learn the idea, not the procedure.
+2. **Read the position like a player before you write about it.** The facts tool gives counts,
+   not conclusions. A race lead is read with the roll and the turn in mind (a 5-5 is twenty pips,
+   and the side on roll is better off than the count shows). "The race is lost", "the board is
+   weak", "O is primed" are claims about the game; each one is either backed by a rollout
+   breakdown or a tested variant, or it is cut. Before storing the account, reread it as a strong
+   player would and strike anything they would object to.
+
 ## Rules
 
 1. **Decisive feature first.** The first sentence names what drives the position. Not the
@@ -88,6 +102,11 @@ Check each of these against the `facts` output for the position and for every pl
 - Every entering number, pip count and race lead.
 - Every point the account calls open, made, slotted or a prime.
 - Every equity and error size: from the rollout, in words.
+- Every statement about the race: pips for both sides, the roll's worth, and who is on roll.
+- Every statement about a plan ("O wants to...", "your chances come from..."): backed by the
+  rollout's win and gammon breakdown or by a tested variant, or removed.
+- No sentence describes an edit or a check. Search the draft for "give", "take away", "we
+  checked", "variant", "if we": each one is rewritten as a condition or cut.
 
 A claim that fails the check is removed or corrected; it is never softened into a hedge.
 

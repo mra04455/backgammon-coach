@@ -96,6 +96,10 @@ Write each hypothesis down **before** touching the engine, with its predictions:
 
 ### 3. Sweep
 
+Variants are built with `perturb_position` or the perturbation library and their XGIDs are
+taken from that output. Never retype an XGID by hand for a sweep or a rollout; a retyped ID is
+a different position.
+
 For every feature that could plausibly matter, build a variant that changes it (see
 `knobs.md`), including one or two **controls**: features your explanation says will *not*
 matter. Three to six variants per round. Check each variant with `perturb_position` or
@@ -137,8 +141,13 @@ cube variant roll out the position; for a variant with no cube decision you get 
 
 ### 6. Write and record
 
-Write the account following `style.md`. Before storing it, check every count in it against the
-`facts` outputs (a checklist is in `style.md`). Then store everything:
+Before writing, reread the position as a strong player would, without the templates: who is on
+roll, what the roll is worth, what each side is trying to do, what each play commits to. If a
+sentence you are about to write would make a strong player wince ("the race is lost" when the
+roll brings you ahead), it is wrong, however the tools phrased their output.
+
+Write the account following `style.md`: the idea, not the procedure. Then check every count
+against the `facts` outputs and run the checklist in `style.md`. Then store everything:
 
 ```bash
 .venv/bin/bgcoach write studies/<folder> --account account.md \
